@@ -98,7 +98,7 @@ const verifyCode = async () => {
   errors.value = []
 
   try {
-    await api.post('/users/verify-email', {
+    await api.post('/auth/verify-email', {
       email: route.query.email,
       code: otpCode.value,
     })
@@ -117,7 +117,7 @@ const verifyCode = async () => {
 const resendCode = async () => {
   errors.value = []
   try {
-    await api.post('/users/forgot-password', { email: route.query.email })
+    await api.post('/auth/forgot-password', { email: route.query.email })
   } catch (error) {
     errors.value = [error.response?.data?.message || 'Failed to resend code.']
   }

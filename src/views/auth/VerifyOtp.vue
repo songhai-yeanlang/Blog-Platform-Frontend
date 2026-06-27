@@ -36,7 +36,7 @@
       </form>
 
       <div class="auth-back-link">
-        <router-link to="/login">
+        <router-link to="/">
           <ArrowLeftIcon class="back-icon-svg" />
           Back to Login
         </router-link>
@@ -105,8 +105,9 @@ const verifyOtp = async () => {
   }
 
   try {
-    // Verify the OTP with the backend. Send ONLY the otp parameter to avoid Joi unknown key validation errors.
-    const response = await api.post('/users/verify-otp', {
+    // Verify the OTP with the backend. Send both email and otp parameters to satisfy Joi validation.
+    const response = await api.post('/auth/verify-otp', {
+      email: email.value,
       otp: otpCode.value,
     })
 

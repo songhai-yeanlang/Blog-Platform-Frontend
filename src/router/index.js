@@ -5,17 +5,14 @@ import ForgotPassword from '@/views/auth/ForgotPassword.vue'
 import ResetPassword from '@/views/auth/ResetPassword.vue'
 import VerifyEmail from '@/views/auth/VerifyEmail.vue'
 import VerifyOtp from '@/views/auth/VerifyOtp.vue'
+import Dashboard from '@/views/dashboard/Dashboard.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+ 
     {
-      path: '/verify-email',
-      name: 'verify-email',
-      component: VerifyEmail,
-    },
-    {
-      path: '/login',
+      path: '/',
       name: 'login',
       component: Login,
     },
@@ -39,7 +36,48 @@ const router = createRouter({
       name: 'reset-password',
       component: ResetPassword,
     },
+       {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
+    },
+    {
+      path: '/post/:id',
+      name: 'post-detail',
+      component: () => import('@/views/dashboard/PostDetail.vue'),
+    },
+    {
+      path: '/verify-email',
+      name: 'verify-email',
+      component: VerifyEmail,
+    },
   ],
+})
+
+// Route navigation guard to validate auth state
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+  const authPages = ['login', 'register', 'forgot-password', 'verify-otp', 'reset-password']
+  const publicPages = ['verify-email', ...authPages]
+
+  const isAuthPage = authPages.includes(to.name)
+  const isPublicPage = publicPages.includes(to.name)
+
+  if (token) {
+    // If logged in, redirect away from auth pages (login, register, etc.) to the dashboard
+    if (isAuthPage) {
+      next({ name: 'dashboard' })
+    } else {
+      next()
+    }
+  } else {
+    // If not logged in, only allow accessing public pages. Redirect to login for any other route.
+    if (!isPublicPage) {
+      next({ name: 'login' })
+    } else {
+      next()
+    }
+  }
 })
 
 export default router

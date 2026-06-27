@@ -56,7 +56,7 @@
       </form>
 
       <div class="auth-back-link">
-        <router-link to="/login">
+        <router-link to="/">
           <ArrowLeftIcon class="back-icon-svg" />
           Back to Login
         </router-link>
@@ -114,7 +114,7 @@ const resetPassword = async () => {
 
   try {
     // Send newPassword and confirmPassword according to resetPasswordSchema in the backend
-    await api.post('/users/reset-password', {
+    await api.post('/auth/reset-password', {
       newPassword: form.newPassword,
       confirmPassword: form.confirmPassword,
     })

@@ -1,5 +1,81 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: 'Kantumruy Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --color-on-surface-variant: #434655;
+  --color-surface-container-low: #f0f3ff;
+  --color-surface-container: #e7eeff;
+  --color-on-primary-fixed-variant: #003ea8;
+  --color-inverse-surface: #263143;
+  --color-surface-container-lowest: #ffffff;
+  --color-tertiary-container: #bc4800;
+  --color-surface-bright: #f9f9ff;
+  --color-outline-variant: #c3c6d7;
+  --color-on-background: #111c2d;
+  --color-secondary-container: #e0e3e5;
+  --color-outline: #737686;
+  --color-on-tertiary-fixed: #360f00;
+  --color-surface-variant: #d8e3fb;
+  --color-secondary: #5c5f61;
+  --color-on-tertiary: #ffffff;
+  --color-background: #f9f9ff;
+  --color-on-secondary: #ffffff;
+  --color-primary: #004ac6;
+  --color-primary-container: #2563eb;
+  --color-on-primary-fixed: #00174b;
+  --color-secondary-fixed: #e0e3e5;
+  --color-surface: #f9f9ff;
+  --color-error-container: #ffdad6;
+  --color-surface-dim: #cfdaf2;
+  --color-tertiary-fixed-dim: #ffb596;
+  --color-secondary-fixed-dim: #c4c7c9;
+  --color-error: #ba1a1a;
+  --color-on-surface: #111c2d;
+  --color-on-error: #ffffff;
+  --color-inverse-on-surface: #ecf1ff;
+  --color-on-secondary-fixed-variant: #444749;
+  --color-on-primary: #ffffff;
+  --color-surface-container-high: #dee8ff;
+  --color-surface-tint: #0053db;
+  --color-tertiary: #943700;
+  --color-surface-container-highest: #d8e3fb;
+  --color-on-error-container: #93000a;
+  --color-on-secondary-container: #626567;
+  --color-on-tertiary-container: #ffede6;
+  --color-on-primary-container: #eeefff;
+  --color-primary-fixed-dim: #b4c5ff;
+  --color-primary-fixed: #dbe1ff;
+  --color-on-tertiary-fixed-variant: #7d2d00;
+  --color-on-secondary-fixed: #191c1e;
+  --color-tertiary-fixed: #ffdbcd;
+  --color-inverse-primary: #b4c5ff;
+
+  --spacing-sidebar-width: 240px;
+  --spacing-container-max: 1280px;
+  --spacing-margin-mobile: 16px;
+  --spacing-gutter: 24px;
+  --spacing-card-gap: 20px;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-body-lg: 'Inter', sans-serif;
+  --font-label-md: 'Inter', sans-serif;
+  --font-headline-md: 'Inter', sans-serif;
+  --font-headline-lg-mobile: 'Inter', sans-serif;
+  --font-body-md: 'Inter', sans-serif;
+  --font-label-sm: 'Inter', sans-serif;
+  --font-headline-lg: 'Inter', sans-serif;
+  --font-display-lg: 'Inter', sans-serif;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-size: inherit;
+}
+.material-symbols-outlined[style*="font-variation-settings: 'FILL' 1"] {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.material-symbols-outlined[style*="font-variation-settings: \"FILL\" 1"] {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+.fill-icon {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24 !important;
 }

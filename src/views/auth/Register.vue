@@ -59,7 +59,7 @@
       </form>
 
       <div class="auth-footer">
-        Already have an account? <router-link to="/login">Log in here</router-link>
+        Already have an account? <router-link to="/">Log in here</router-link>
       </div>
     </div>
   </div>
@@ -101,7 +101,7 @@ const register = async () => {
   errors.value = []
 
   try {
-    await api.post('/users/register', form)
+    await api.post('/auth/register', form)
     
     // Redirect directly to the login page on success with NO query message or alert
     router.push({ name: 'login' })

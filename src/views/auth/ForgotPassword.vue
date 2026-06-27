@@ -35,7 +35,7 @@
       </div>
 
       <div class="auth-back-link">
-        <router-link to="/login">
+        <router-link to="/">
           <ArrowLeftIcon class="back-icon-svg" />
           Back to Login
         </router-link>
@@ -67,7 +67,7 @@ const sendResetOtp = async () => {
   successMessage.value = ''
 
   try {
-    const response = await api.post('/users/forgot-password', form)
+    const response = await api.post('/auth/forgot-password', form)
     successMessage.value = response.data.message || 'OTP sent to your email!'
     otpSent.value = true
 

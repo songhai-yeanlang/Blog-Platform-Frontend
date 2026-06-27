@@ -56,7 +56,7 @@
       </form>
 
       <div class="auth-footer">
-        New to TripDhaka? <router-link to="/register">Create an account</router-link>
+        New to Blog-Post? <router-link to="/register">Create an account</router-link>
       </div>
     </div>
   </div>
@@ -94,10 +94,10 @@ const login = async () => {
   errors.value = []
 
   try {
-    const response = await api.post('/users/login', form)
+    const response = await api.post('/auth/login', form)
     authStore.setToken(response.data.data.token)
     authStore.setUser(response.data.data.user)
-    router.push('/')
+    router.push('/dashboard')
   } catch (error) {
     if (error.response?.data?.errors) {
       errors.value = Object.values(error.response.data.errors).flat()
