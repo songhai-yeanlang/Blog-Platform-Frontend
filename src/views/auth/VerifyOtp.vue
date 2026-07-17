@@ -118,7 +118,7 @@ const verifyOtp = async () => {
 
     // Only redirect on success
     router.push({
-      name: 'reset-password',
+      name: 'change-password',
       query: {
         email: email.value,
         otp: otpCode.value,

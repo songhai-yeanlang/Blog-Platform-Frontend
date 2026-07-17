@@ -25,7 +25,7 @@
         <router-link to="/my-posts"
           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
           <span class="material-symbols-outlined text-[20px]">description</span>
-          <span>My Post</span>
+          <span>My Blogs</span>
         </router-link>
 
       
@@ -105,7 +105,7 @@
             class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm"
           >
             <!-- Image placeholder -->
-            <div class="skeleton-shimmer h-36 w-full"></div>
+            <div class="skeleton-shimmer h-48 w-full"></div>
 
             <div class="p-4">
               <!-- Category badge + date + views row -->
@@ -154,7 +154,7 @@
 
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <article v-for="post in paginatedPosts" :key="post.id" @click="goToDetail(post.id)"
-            class="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer group border border-gray-100">
+            class="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer group border border-gray-100 flex flex-col">
             <!-- Card-click loading overlay -->
             <div
               v-if="navigatingToId === post.id"
@@ -165,11 +165,12 @@
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
             </div>
-            <div class="relative h-36 overflow-hidden">
-              <span
+            <div class="relative h-48 overflow-hidden">
+              <span v-if="post.category_name"
                 class="absolute top-3 left-3 z-10 bg-primary text-white text-[10px] font-bold px-2.5 py-0.5 rounded-sm tracking-widest uppercase">
-                Popular
+               {{ post.category_name }}
               </span>
+              
               <button @click.stop="toggleFavorite(post.id)"
                 class="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/80 backdrop-blur-xs flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-white shadow-sm transition-all border-none outline-none cursor-pointer">
                 <span class="material-symbols-outlined text-[14px]"
@@ -181,13 +182,10 @@
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
 
-            <div class="p-4">
+            <div class="p-4 flex flex-col flex-1">
               <div class="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-400 mb-1.5">
-                <span v-if="post.category_name"
-                  class="bg-blue-50/80 text-primary text-[9px] font-bold px-2 py-0.5 rounded-sm tracking-wider uppercase shrink-0">
-                  {{ post.category_name }}
-                </span>
-                <span v-if="post.category_name" class="w-1 h-1 rounded-full bg-gray-300 shrink-0"></span>
+                
+              
                 <span>{{ formatDate(post.created_at) }}</span>
                 <span class="w-1 h-1 rounded-full bg-gray-300"></span>
                 <div class="flex items-center gap-0.5">
@@ -198,7 +196,7 @@
               <h3 class="font-semibold text-primary text-sm leading-snug mb-1.5 line-clamp-2">
                 {{ post.title }}
               </h3>
-              <p class="text-gray-400 text-[12px] line-clamp-2 mb-3 leading-normal">
+              <p class="text-gray-400 text-[12px] line-clamp-2 mb-3 leading-normal flex-1">
                 {{ stripHtmlTags(post.content) }}
               </p>
 
@@ -209,7 +207,7 @@
                 </span>
               </div>
 
-              <div class="flex items-center gap-2 pt-2.5 border-t border-gray-100">
+              <div class="flex items-center gap-2 pt-2.5 border-t border-gray-100 mt-auto">
                 <div
                   class="w-7 h-7 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0">
                   <img v-if="post.author_avatar" :src="resolveAvatarUrl(post.author_avatar)"

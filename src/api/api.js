@@ -32,4 +32,14 @@ export const uploadAvatar = (file) => {
 
 export const changePassword = (payload) => api.post('/auth/change-password', payload)
 
+// Blog Post API endpoints
+export const getAllCategories = () => api.get('/get-all-categories')
+export const getAllTags = () => api.get('/get-all-tags')
+export const createBlog = (formData) => api.post('/create-blog', formData, {
+  headers: { 'Content-Type': 'multipart/form-data' },
+})
+export const updateBlog = (id, formData) => api.put(`/update-blog/${id}`, formData, {
+  headers: { 'Content-Type': 'multipart/form-data' },
+})
+
 export default api;

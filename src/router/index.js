@@ -32,8 +32,8 @@ const router = createRouter({
       component: VerifyOtp,
     },
     {
-      path: '/reset-password',
-      name: 'reset-password',
+      path: '/change-password',
+      name: 'change-password',
       component: ResetPassword,
     },
        {
@@ -52,6 +52,21 @@ const router = createRouter({
       component: () => import('@/views/dashboard/Profile.vue'),
     },
     {
+      path: '/new-post',
+      name: 'new-post',
+      component: () => import('@/views/dashboard/NewPost.vue'),
+    },
+    {
+      path: '/my-posts',
+      name: 'my-posts',
+      component: () => import('@/views/dashboard/MyBlogs.vue'),
+    },
+    {
+      path: '/edit-post/:id',
+      name: 'edit-post',
+      component: () => import('@/views/dashboard/EditPost.vue'),
+    },
+    {
       path: '/verify-email',
       name: 'verify-email',
       component: VerifyEmail,
@@ -67,13 +82,16 @@ const router = createRouter({
 // Route navigation guard to validate auth state
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
-  const authPages = ['login', 'register', 'forgot-password', 'verify-otp', 'reset-password']
+  const user = localStorage.getItem('user')
+  const isLoggedIn = !!(token && user)
+
+  const authPages = ['login', 'register', 'forgot-password', 'verify-otp', 'change-password']
   const publicPages = ['verify-email', ...authPages]
 
   const isAuthPage = authPages.includes(to.name)
   const isPublicPage = publicPages.includes(to.name)
 
-  if (token) {
+  if (isLoggedIn) {
     // If logged in, redirect away from auth pages (login, register, etc.) to the dashboard
     if (isAuthPage) {
       next({ name: 'dashboard' })

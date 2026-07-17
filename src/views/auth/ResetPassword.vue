@@ -1,7 +1,7 @@
 <template>
   <div class="auth-wrapper">
     <div class="auth-card">
-      <h3 class="auth-title">Reset Password</h3>
+      <h3 class="auth-title">Change Password</h3>
       <p class="auth-subtitle">Enter your new password to secure your account.</p>
 
       <form @submit.prevent="resetPassword">
@@ -41,9 +41,9 @@
           </button>
         </div>
 
-        <button type="submit" class="auth-btn" :disabled="loading || !form.newPassword || !form.confirmPassword">
+        <button type="submit" class="auth-btn" :disabled="loading">
           <span v-if="loading" class="auth-spinner"></span>
-          Reset Password
+          Change Password
           <ArrowRightIcon class="btn-icon-svg" />
         </button>
 
@@ -118,6 +118,13 @@ const resetPassword = async () => {
       newPassword: form.newPassword,
       confirmPassword: form.confirmPassword,
     })
+
+    // Save the email and newly reset password to remember keys so the Login page auto-fills them!
+    const email = route.query.email
+    if (email) {
+      localStorage.setItem('login_remember_email', email)
+    }
+    localStorage.setItem('login_remember_password', btoa(form.newPassword))
 
     // Clear reset token from store upon successful password reset
     authStore.logout()

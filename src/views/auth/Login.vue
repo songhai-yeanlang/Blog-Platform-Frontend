@@ -69,7 +69,7 @@
       </form>
 
       <div class="auth-footer">
-        New to Blog-Post? <router-link to="/register">Create an account</router-link>
+        New to Blog-Platform? <router-link to="/register">Create an account</router-link>
       </div>
     </div>
   </div>
@@ -85,6 +85,7 @@ import '@/assets/auth.css'
 import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
 
 const REMEMBER_KEY = 'login_remember_email'
+const REMEMBER_PASS_KEY = 'login_remember_password'
 
 const router = useRouter()
 const route = useRoute()
@@ -106,11 +107,19 @@ onMounted(() => {
     successMessage.value = route.query.message
   }
 
-  // Restore remembered email
+  // Restore remembered email and password
   const savedEmail = localStorage.getItem(REMEMBER_KEY)
+  const savedPass = localStorage.getItem(REMEMBER_PASS_KEY)
   if (savedEmail) {
     form.email = savedEmail
     rememberMe.value = true
+  }
+  if (savedPass) {
+    try {
+      form.password = atob(savedPass)
+    } catch {
+      // ignore
+    }
   }
 })
 
@@ -123,11 +132,13 @@ const login = async () => {
     authStore.setToken(response.data.data.token)
     authStore.setUser(response.data.data.user)
 
-    // Save or clear remembered email
+    // Save or clear remembered email and password
     if (rememberMe.value) {
       localStorage.setItem(REMEMBER_KEY, form.email)
+      localStorage.setItem(REMEMBER_PASS_KEY, btoa(form.password))
     } else {
       localStorage.removeItem(REMEMBER_KEY)
+      localStorage.removeItem(REMEMBER_PASS_KEY)
     }
 
     // Ask the browser to save credentials via the Credential Management API

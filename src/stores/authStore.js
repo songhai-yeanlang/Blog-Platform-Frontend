@@ -33,6 +33,11 @@ export const useAuthStore = defineStore('auth', () => {
   const fetchProfile = async () => {
     if (!token.value) return
 
+    // Do not fetch profile on public/auth paths (like verify-otp, change-password, etc.)
+    const path = window.location.pathname
+    const isAuthPath = ['/', '/register', '/forgot-password', '/verify-otp', '/change-password', '/verify-email'].includes(path)
+    if (isAuthPath) return
+
     try {
       const { data } = await getMyProfile()
       setUser(data.data)

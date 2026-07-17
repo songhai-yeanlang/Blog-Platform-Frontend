@@ -102,7 +102,7 @@ const verifyCode = async () => {
       email: route.query.email,
       code: otpCode.value,
     })
-    router.push({ name: 'reset-password', query: { email: route.query.email, code: otpCode.value } })
+    router.push({ name: 'change-password', query: { email: route.query.email, code: otpCode.value } })
   } catch (error) {
     if (error.response?.data?.errors) {
       errors.value = Object.values(error.response.data.errors).flat()
