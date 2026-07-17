@@ -122,7 +122,7 @@ const resetPassword = async () => {
     // Clear reset token from store upon successful password reset
     authStore.logout()
     
-    // Redirect to login page on success with NO query message or alert
+    // Redirect to login page on success
     router.push({ name: 'login' })
   } catch (error) {
     if (error.response?.data?.errors) {

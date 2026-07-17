@@ -8,14 +8,16 @@
         <span>{{ successMessage }}</span>
       </div>
 
-      <form @submit.prevent="login">
+      <form @submit.prevent="login" autocomplete="on">
         <label class="auth-label">Email</label>
         <div class="auth-input-group">
           <EnvelopeIcon class="input-icon-svg" :class="{ 'icon-error': errors.length }" />
           <input
             type="email"
+            name="email"
             placeholder="Enter your email"
             v-model="form.email"
+            autocomplete="email"
             :class="{ 'error-field': errors.length }"
             required
           />
@@ -26,8 +28,10 @@
           <LockClosedIcon class="input-icon-svg" :class="{ 'icon-error': errors.length }" />
           <input
             :type="showPassword ? 'text' : 'password'"
+            name="password"
             placeholder="••••••••"
             v-model="form.password"
+            autocomplete="current-password"
             class="has-toggle"
             :class="{ 'error-field': errors.length }"
             required
@@ -38,7 +42,16 @@
           </button>
         </div>
 
-        <div class="auth-forgot-row">
+        <!-- Remember me + Forgot password row -->
+        <div class="auth-forgot-row" style="display: flex; align-items: center; justify-content: space-between;">
+          <label class="remember-me-label">
+            <input
+              type="checkbox"
+              v-model="rememberMe"
+              class="remember-me-checkbox"
+            />
+            <span>Remember me</span>
+          </label>
           <router-link to="/forgot-password" class="auth-link">Forgot password?</router-link>
         </div>
 
@@ -66,17 +79,22 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 import api from '@/api/api'
 import '@/assets/auth.css'
 import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
 
+const REMEMBER_KEY = 'login_remember_email'
+
 const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
+const toastStore = useToastStore()
 const loading = ref(false)
 const errors = ref([])
 const showPassword = ref(false)
 const successMessage = ref('')
+const rememberMe = ref(false)
 
 const form = reactive({
   email: '',
@@ -86,6 +104,13 @@ const form = reactive({
 onMounted(() => {
   if (route.query.message) {
     successMessage.value = route.query.message
+  }
+
+  // Restore remembered email
+  const savedEmail = localStorage.getItem(REMEMBER_KEY)
+  if (savedEmail) {
+    form.email = savedEmail
+    rememberMe.value = true
   }
 })
 
@@ -97,6 +122,29 @@ const login = async () => {
     const response = await api.post('/auth/login', form)
     authStore.setToken(response.data.data.token)
     authStore.setUser(response.data.data.user)
+
+    // Save or clear remembered email
+    if (rememberMe.value) {
+      localStorage.setItem(REMEMBER_KEY, form.email)
+    } else {
+      localStorage.removeItem(REMEMBER_KEY)
+    }
+
+    // Ask the browser to save credentials via the Credential Management API
+    if (window.PasswordCredential) {
+      try {
+        const cred = new PasswordCredential({
+          id: form.email,
+          password: form.password,
+          name: authStore.user?.name || form.email,
+        })
+        await navigator.credentials.store(cred)
+      } catch {
+        // Silently ignore – not all browsers support this
+      }
+    }
+
+    toastStore.success('Logged in successfully!')
     router.push('/dashboard')
   } catch (error) {
     if (error.response?.data?.errors) {
@@ -109,3 +157,4 @@ const login = async () => {
   }
 }
 </script>
+

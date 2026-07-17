@@ -5,7 +5,7 @@
       isMobileMenuOpen ? 'translate-x-0 w-60' : '-translate-x-full md:w-60'
     ]">
       <div class="flex items-center gap-2 px-5 py-6">
-        <span class="font-bold text-lg text-gray-900 tracking-tight">Blog-Post</span>
+        <span class="font-bold text-lg text-gray-900 tracking-tight">Blog-Platform</span>
       </div>
 
       <nav class="flex-1 px-3 flex flex-col gap-1">
@@ -21,12 +21,7 @@
           <span>New Post</span>
         </router-link>
 
-        <router-link to="/categories"
-          class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
-          <span class="material-symbols-outlined text-[20px]">category</span>
-          <span>Category</span>
-        </router-link>
-
+       
         <router-link to="/my-posts"
           class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
           <span class="material-symbols-outlined text-[20px]">description</span>

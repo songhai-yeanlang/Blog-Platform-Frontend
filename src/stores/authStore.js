@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getMyProfile } from '@/api/profile.api'
+import { getMyProfile } from '@/api/api'
 
 export const useAuthStore = defineStore('auth', () => {
   // ─── State ────────────────────────────────────────────────────────────────

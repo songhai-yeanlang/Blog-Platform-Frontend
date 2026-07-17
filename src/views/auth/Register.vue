@@ -102,8 +102,7 @@ const register = async () => {
 
   try {
     await api.post('/auth/register', form)
-    
-    // Redirect directly to the login page on success with NO query message or alert
+    // Redirect directly to the login page on success
     router.push({ name: 'login' })
   } catch (error) {
     if (error.response?.data?.details) {

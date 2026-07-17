@@ -16,15 +16,11 @@
         <router-link to="/new-post" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
           <span class="material-symbols-outlined text-[20px]">add_circle</span><span>New Post</span>
         </router-link>
-        <router-link to="/categories" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
-          <span class="material-symbols-outlined text-[20px]">category</span><span>Category</span>
-        </router-link>
+       
         <router-link to="/my-posts" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
           <span class="material-symbols-outlined text-[20px]">description</span><span>My Post</span>
         </router-link>
-        <router-link to="/profile" class="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-primary text-white font-medium text-sm">
-          <span class="material-symbols-outlined text-[20px]">manage_accounts</span><span>Profile</span>
-        </router-link>
+       
       </nav>
       <div class="px-3 pb-5">
         <button @click="handleLogout"
@@ -342,15 +338,7 @@
       </main>
     </div>
 
-    <!-- ── Toast ─────────────────────────────────────────────────────────────── -->
-    <transition name="toast">
-      <div v-if="toast.show"
-        class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl text-sm font-semibold text-white max-w-sm"
-        :class="toast.type === 'success' ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-red-500 to-rose-500'">
-        <span class="material-symbols-outlined text-[20px] shrink-0">{{ toast.type === 'success' ? 'check_circle' : 'error' }}</span>
-        <span>{{ toast.message }}</span>
-      </div>
-    </transition>
+
 
     <!-- ── Logout confirm ─────────────────────────────────────────────────────── -->
     <ConfirmModal
@@ -369,9 +357,11 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@/api/api'
-import { getMyProfile, updateMyProfile, uploadAvatar, changePassword } from '@/api/profile.api'
+import api, { getMyProfile, updateMyProfile, uploadAvatar, changePassword } from '@/api/api'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
+
+const toastStore = useToastStore()
 import { resolveAvatarUrl } from '@/utils/avatar'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 
@@ -406,8 +396,6 @@ const form = reactive({ name: '', phone: '', bio: '' })
 const pwForm = reactive({ currentPassword: '', newPassword: '', confirmPassword: '' })
 const showPw = reactive({ current: false, new: false, confirm: false })
 
-const toast = reactive({ show: false, type: 'success', message: '' })
-
 // ── Password strength ──────────────────────────────────────────────────────
 const pwStrength = computed(() => {
   const pw = pwForm.newPassword
@@ -437,10 +425,11 @@ const canChangePw = computed(() =>
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 const showToast = (message, type = 'success') => {
-  toast.message = message
-  toast.type    = type
-  toast.show    = true
-  setTimeout(() => { toast.show = false }, 3500)
+  if (type === 'error') {
+    toastStore.error(message)
+  } else {
+    toastStore.success(message)
+  }
 }
 
 const applyProfile = (data) => {
@@ -560,8 +549,4 @@ onMounted(loadProfile)
 .tab-fade-enter-from   { opacity: 0; transform: translateY(8px); }
 .tab-fade-leave-to     { opacity: 0; transform: translateY(-4px); }
 
-.toast-enter-active,
-.toast-leave-active { transition: all 0.35s cubic-bezier(.34,1.56,.64,1); }
-.toast-enter-from,
-.toast-leave-to     { opacity: 0; transform: translateY(16px) scale(0.95); }
 </style>

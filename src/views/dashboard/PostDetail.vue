@@ -28,13 +28,7 @@
           <span>New Post</span>
         </router-link>
 
-        <router-link
-          to="/categories"
-          class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors"
-        >
-          <span class="material-symbols-outlined text-[20px]">category</span>
-          <span>Category</span>
-        </router-link>
+       
 
         <router-link
           to="/my-posts"
