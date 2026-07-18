@@ -7,7 +7,7 @@
       isMobileMenuOpen ? 'translate-x-0 w-60' : '-translate-x-full md:w-60'
     ]">
       <div class="flex items-center gap-2 px-5 py-6">
-        <span class="font-bold text-lg text-gray-900 tracking-tight">Blog-Post</span>
+        <span class="font-bold text-lg text-gray-900 tracking-tight">Blog-Platform</span>
       </div>
       <nav class="flex-1 px-3 flex flex-col gap-1">
         <router-link to="/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
@@ -18,15 +18,23 @@
         </router-link>
        
         <router-link to="/my-posts" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-primary text-sm transition-colors">
-          <span class="material-symbols-outlined text-[20px]">description</span><span>My Post</span>
+          <span class="material-symbols-outlined text-[20px]">description</span><span>My Blogs</span>
         </router-link>
+
        
       </nav>
+
       <div class="px-3 pb-5">
-        <button @click="handleLogout"
-          class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white text-sm transition-colors cursor-pointer bg-transparent">
-          <span class="material-symbols-outlined text-[20px]">logout</span><span>Logout</span>
-        </button>
+        <router-link to="/about-us"
+          :class="[
+            'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
+            $route.path === '/about-us'
+              ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
+              : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
+          ]">
+          <span class="material-symbols-outlined text-[20px]">info</span>
+          <span>About Us</span>
+        </router-link>
       </div>
     </aside>
 
@@ -48,10 +56,69 @@
             <span class="text-gray-700 font-medium">My Profile</span>
           </nav>
         </div>
-        <div class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200">
-          <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)"
-            alt="avatar" class="w-8 h-8 rounded-full object-cover border-2 border-primary/30" />
-          <span class="hidden md:inline text-sm font-medium text-gray-800">{{ authStore.user?.name ?? 'User' }}</span>
+        <div class="flex items-center gap-1">
+          <button
+            type="button"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative border-none bg-transparent"
+          >
+            <span class="material-symbols-outlined text-[22px]">notifications</span>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+          </button>
+          <router-link
+            to="/favorites"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-[22px]">favorite</span>
+          </router-link>
+
+          <!-- Profile Dropdown -->
+          <div class="relative" ref="profileDropdownRef">
+            <button
+              type="button"
+              @click="isProfileDropdownOpen = !isProfileDropdownOpen"
+              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none"
+            >
+              <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
+                class="w-8 h-8 rounded-full object-cover border-2 border-primary/30" />
+              <span class="hidden md:inline text-sm font-medium text-gray-800">
+                {{ authStore.user?.name || 'User' }}
+              </span>
+              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isProfileDropdownOpen }">
+                arrow_drop_down
+              </span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-if="isProfileDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
+            >
+              <div class="px-4 py-2 border-b border-gray-50">
+                <p class="text-xs text-gray-400">Signed in as</p>
+                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
+              </div>
+
+              <router-link
+                to="/profile"
+                @click="isProfileDropdownOpen = false"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
+              >
+                <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                <span>My Profile</span>
+              </router-link>
+
+              <div class="border-t border-gray-50 my-1"></div>
+
+              <button
+                type="button"
+                @click="triggerLogoutFromDropdown"
+                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none"
+              >
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -355,7 +422,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { getMyProfile, updateMyProfile, uploadAvatar, changePassword } from '@/api/api'
 import { useAuthStore } from '@/stores/authStore'
@@ -386,6 +453,28 @@ const avatarUploading = ref(false)
 const isMobileMenuOpen = ref(false)
 const showLogoutModal  = ref(false)
 const logoutLoading    = ref(false)
+
+const isProfileDropdownOpen = ref(false)
+const profileDropdownRef = ref(null)
+
+const triggerLogoutFromDropdown = () => {
+  isProfileDropdownOpen.value = false
+  handleLogout()
+}
+
+const handleClickOutside = (e) => {
+  if (profileDropdownRef.value && !profileDropdownRef.value.contains(e.target)) {
+    isProfileDropdownOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const profile = reactive({
   id: null, name: '', email: '', phone: '', bio: '',

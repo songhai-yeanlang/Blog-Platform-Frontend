@@ -27,14 +27,21 @@
           <span class="material-symbols-outlined text-[20px]">description</span>
           <span>My Blogs</span>
         </router-link>
+
+      
       </nav>
 
-      <div class="px-3 pb-5 space-y-2">
-        <button v-if="authStore.token" @click="handleLogout"
-          class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white text-sm transition-colors cursor-pointer bg-transparent">
-          <span class="material-symbols-outlined text-[20px]">logout</span>
-          <span>Logout</span>
-        </button>
+      <div class="px-3 pb-5">
+        <router-link to="/about-us"
+          :class="[
+            'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
+            $route.path === '/about-us'
+              ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
+              : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
+          ]">
+          <span class="material-symbols-outlined text-[20px]">info</span>
+          <span>About Us</span>
+        </router-link>
       </div>
     </aside>
 
@@ -56,15 +63,70 @@
           </div>
         </div>
 
-        <router-link to="/profile"
-          class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
-          <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
-            class="w-8 h-8 rounded-full object-cover border border-gray-200" />
-          <span class="hidden md:inline text-sm font-medium text-gray-800">
-            {{ authStore.user?.name || 'User' }}
-          </span>
-          <span class="material-symbols-outlined text-[18px] text-gray-400">arrow_drop_down</span>
-        </router-link>
+        <div class="flex items-center gap-1">
+          <button
+            type="button"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative border-none bg-transparent"
+          >
+            <span class="material-symbols-outlined text-[22px]">notifications</span>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+          </button>
+          <router-link
+            to="/favorites"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-[22px]">favorite</span>
+          </router-link>
+
+          <!-- Profile Dropdown -->
+          <div class="relative" ref="profileDropdownRef">
+            <button
+              type="button"
+              @click="isProfileDropdownOpen = !isProfileDropdownOpen"
+              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none"
+            >
+              <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
+                class="w-8 h-8 rounded-full object-cover border border-gray-200" />
+              <span class="hidden md:inline text-sm font-medium text-gray-800">
+                {{ authStore.user?.name || 'User' }}
+              </span>
+              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isProfileDropdownOpen }">
+                arrow_drop_down
+              </span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-if="isProfileDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
+            >
+              <div class="px-4 py-2 border-b border-gray-50">
+                <p class="text-xs text-gray-400">Signed in as</p>
+                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
+              </div>
+
+              <router-link
+                to="/profile"
+                @click="isProfileDropdownOpen = false"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
+              >
+                <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                <span>My Profile</span>
+              </router-link>
+
+              <div class="border-t border-gray-50 my-1"></div>
+
+              <button
+                type="button"
+                @click="triggerLogoutFromDropdown"
+                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none"
+              >
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </header>
 
       <!-- Form body -->
@@ -131,39 +193,153 @@
               <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Category <span class="text-red-400">*</span></label>
                 <div v-if="categoriesLoading" class="h-11 bg-gray-100 rounded-xl animate-pulse"></div>
-                <select
-                  v-else
-                  v-model="form.category_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all appearance-none cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>Select a category</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-                </select>
+                <div v-else class="relative" ref="categoryDropdownRef">
+                  <!-- Dropdown Trigger -->
+                  <button
+                    type="button"
+                    @click="isCategoryDropdownOpen = !isCategoryDropdownOpen"
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer text-left"
+                  >
+                    <span :class="selectedCategoryName ? 'text-gray-900 font-medium' : 'text-gray-500'">
+                      {{ selectedCategoryName || 'Select a category...' }}
+                    </span>
+                    <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isCategoryDropdownOpen }">
+                      keyboard_arrow_down
+                    </span>
+                  </button>
+
+                  <!-- Dropdown Content -->
+                  <div
+                    v-if="isCategoryDropdownOpen"
+                    class="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1.5"
+                  >
+                    <!-- Search Input -->
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
+                      <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
+                      <input
+                        type="text"
+                        v-model="categorySearchQuery"
+                        placeholder="Search category..."
+                        class="flex-1 bg-transparent border-none text-xs text-gray-800 outline-none p-0 focus:ring-0 focus:outline-none"
+                      />
+                      <button
+                        v-if="categorySearchQuery"
+                        type="button"
+                        @click="categorySearchQuery = ''"
+                        class="text-gray-400 hover:text-gray-600 text-xs border-none bg-transparent cursor-pointer"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    <!-- Options List -->
+                    <div class="max-h-40 overflow-y-auto flex flex-col gap-1">
+                      <div
+                        v-for="cat in filteredCategories"
+                        :key="cat.id"
+                        @click="selectCategory(cat.id)"
+                        :class="[
+                          'px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors flex items-center justify-between',
+                          String(form.category_id) === String(cat.id)
+                            ? 'bg-primary/10 text-primary font-semibold'
+                            : 'text-gray-700 hover:bg-blue-50/50 hover:text-primary'
+                        ]"
+                      >
+                        <span>{{ cat.name }}</span>
+                        <span
+                          v-if="String(form.category_id) === String(cat.id)"
+                          class="material-symbols-outlined text-[16px] text-primary"
+                        >
+                          check
+                        </span>
+                      </div>
+                      <p v-if="filteredCategories.length === 0" class="text-xs text-gray-400 py-3 text-center">No categories found.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <!-- Tags -->
               <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tags</label>
                 <div v-if="tagsLoading" class="h-11 bg-gray-100 rounded-xl animate-pulse"></div>
-                <div v-else>
-                  <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="tag in tags"
-                      :key="tag.id"
-                      type="button"
-                      @click="toggleTag(tag.id)"
-                      :class="[
-                        'px-3 py-1.5 rounded-full text-xs font-medium border transition-all cursor-pointer',
-                        selectedTags.includes(tag.id)
-                          ? 'bg-primary text-white border-primary shadow-sm'
-                          : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-primary hover:text-primary'
-                      ]"
-                    >
-                      {{ tag.name }}
-                    </button>
+                <div v-else class="relative" ref="tagsDropdownRef">
+                  <!-- Dropdown Trigger -->
+                  <button
+                    type="button"
+                    @click="isTagsDropdownOpen = !isTagsDropdownOpen"
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer text-left"
+                  >
+                    <span class="text-gray-500">
+                      {{ selectedTags.length ? `${selectedTags.length} tag(s) selected` : 'Select tags...' }}
+                    </span>
+                    <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isTagsDropdownOpen }">
+                      keyboard_arrow_down
+                    </span>
+                  </button>
+
+                  <!-- Dropdown Content -->
+                  <!-- Dropdown Content -->
+                  <div
+                    v-if="isTagsDropdownOpen"
+                    class="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1.5"
+                  >
+                    <!-- Search Input -->
+                    <div class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
+                      <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
+                      <input
+                        type="text"
+                        v-model="tagSearchQuery"
+                        placeholder="Search tag..."
+                        class="flex-1 bg-transparent border-none text-xs text-gray-800 outline-none p-0 focus:ring-0 focus:outline-none"
+                      />
+                      <button
+                        v-if="tagSearchQuery"
+                        type="button"
+                        @click="tagSearchQuery = ''"
+                        class="text-gray-400 hover:text-gray-600 text-xs border-none bg-transparent cursor-pointer"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    <!-- Options List -->
+                    <div class="max-h-40 overflow-y-auto flex flex-col gap-1">
+                      <div
+                        v-for="tag in filteredTags"
+                        :key="tag.id"
+                        @click="toggleTag(tag.id)"
+                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-blue-50/50 hover:text-primary cursor-pointer transition-colors"
+                      >
+                        <input
+                          type="checkbox"
+                          :checked="selectedTags.includes(tag.id)"
+                          @click.stop="toggleTag(tag.id)"
+                          class="rounded text-primary focus:ring-primary h-4 w-4 cursor-pointer"
+                        />
+                        <span class="font-medium">{{ tag.name }}</span>
+                      </div>
+                      <p v-if="filteredTags.length === 0" class="text-xs text-gray-400 py-3 text-center">No tags found.</p>
+                    </div>
                   </div>
-                  <p v-if="tags.length === 0" class="text-xs text-gray-400 mt-2">No tags available.</p>
+
+                  <!-- Selected Tags Pills -->
+                  <div v-if="selectedTags.length" class="flex flex-wrap gap-1.5 mt-3">
+                    <div
+                      v-for="tagId in selectedTags"
+                      :key="tagId"
+                      class="flex items-center gap-1.5 pl-3 pr-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20"
+                    >
+                      <span>#{{ tags.find(t => t.id === tagId)?.name || 'Tag' }}</span>
+                      <button
+                        type="button"
+                        @click="toggleTag(tagId)"
+                        class="hover:bg-primary/20 rounded-full w-4 h-4 flex items-center justify-center transition-colors text-[10px] cursor-pointer border-none bg-transparent"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -223,7 +399,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
@@ -235,10 +411,37 @@ const router = useRouter()
 const authStore = useAuthStore()
 const toastStore = useToastStore()
 
-// Sidebar / logout
 const isMobileMenuOpen = ref(false)
 const showLogoutModal = ref(false)
 const logoutLoading = ref(false)
+
+const isProfileDropdownOpen = ref(false)
+const profileDropdownRef = ref(null)
+
+const triggerLogoutFromDropdown = () => {
+  isProfileDropdownOpen.value = false
+  handleLogout()
+}
+
+const handleClickOutside = (e) => {
+  if (tagsDropdownRef.value && !tagsDropdownRef.value.contains(e.target)) {
+    isTagsDropdownOpen.value = false
+  }
+  if (categoryDropdownRef.value && !categoryDropdownRef.value.contains(e.target)) {
+    isCategoryDropdownOpen.value = false
+  }
+  if (profileDropdownRef.value && !profileDropdownRef.value.contains(e.target)) {
+    isProfileDropdownOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const handleLogout = () => { showLogoutModal.value = true }
 const confirmLogout = async () => {
@@ -268,6 +471,39 @@ const categories = ref([])
 const tags = ref([])
 const categoriesLoading = ref(true)
 const tagsLoading = ref(true)
+
+const tagsDropdownRef = ref(null)
+const isTagsDropdownOpen = ref(false)
+const tagSearchQuery = ref('')
+
+const filteredTags = computed(() => {
+  if (!tagSearchQuery.value.trim()) return tags.value
+  const query = tagSearchQuery.value.toLowerCase().trim()
+  return tags.value.filter(t => t.name?.toLowerCase().includes(query))
+})
+
+const categoryDropdownRef = ref(null)
+const isCategoryDropdownOpen = ref(false)
+const categorySearchQuery = ref('')
+
+const selectCategory = (id) => {
+  form.category_id = id
+  isCategoryDropdownOpen.value = false
+  categorySearchQuery.value = ''
+}
+
+const filteredCategories = computed(() => {
+  if (!categorySearchQuery.value.trim()) return categories.value
+  const query = categorySearchQuery.value.toLowerCase().trim()
+  return categories.value.filter(c => c.name?.toLowerCase().includes(query))
+})
+
+const selectedCategoryName = computed(() => {
+  const found = categories.value.find(c => String(c.id) === String(form.category_id))
+  return found ? found.name : ''
+})
+
+
 
 const fetchMeta = async () => {
   try {

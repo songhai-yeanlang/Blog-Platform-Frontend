@@ -67,6 +67,16 @@ const router = createRouter({
       component: () => import('@/views/dashboard/EditPost.vue'),
     },
     {
+      path: '/about-us',
+      name: 'about-us',
+      component: () => import('@/views/dashboard/AboutUs.vue'),
+    },
+    {
+      path: '/favorites',
+      name: 'favorites',
+      component: () => import('@/views/dashboard/Favorites.vue'),
+    },
+    {
       path: '/verify-email',
       name: 'verify-email',
       component: VerifyEmail,

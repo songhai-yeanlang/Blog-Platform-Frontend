@@ -111,7 +111,8 @@ defineEmits(['back', 'delete'])
 const authStore = useAuthStore()
 
 const isOwner = computed(() => {
-  return authStore.user && props.post && authStore.user.id === props.post.user_id
+  const currentUserId = authStore.user?.user_id || authStore.user?.id
+  return currentUserId && props.post && currentUserId === props.post.user_id
 })
 
 const favorites = ref(JSON.parse(localStorage.getItem('blog_favorites') || '[]'))

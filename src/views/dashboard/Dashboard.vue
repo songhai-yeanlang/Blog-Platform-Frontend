@@ -28,19 +28,20 @@
           <span>My Blogs</span>
         </router-link>
 
-      
+     
       </nav>
 
-      <div class="px-3 pb-5 space-y-2">
-
-
-        <button v-if="authStore.token" @click="handleLogout"
-          class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white text-sm transition-colors cursor-pointer bg-transparent">
-          <span class="material-symbols-outlined text-[20px]">logout</span>
-          <span>Logout</span>
-        </button>
-
-
+      <div class="px-3 pb-5">
+        <router-link to="/about-us"
+          :class="[
+            'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
+            $route.path === '/about-us'
+              ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
+              : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
+          ]">
+          <span class="material-symbols-outlined text-[20px]">info</span>
+          <span>About Us</span>
+        </router-link>
       </div>
     </aside>
 
@@ -61,10 +62,52 @@
             <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
             <input type="text" v-model="searchQuery" placeholder="React, PHP, JS"
               class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-gray-800 placeholder-gray-400 h-full p-0 outline-none" />
-            <div
-              class="flex items-center gap-0.5 border-l border-gray-200 pl-2 ml-1 cursor-pointer text-gray-500 hover:text-gray-700">
-              <span class="text-xs font-medium">Best</span>
-              <span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+            <div class="relative" ref="categoryFilterRef">
+              <div
+                @click="isCategoryFilterOpen = !isCategoryFilterOpen"
+                class="flex items-center gap-0.5 border-l border-gray-200 pl-2 ml-1 cursor-pointer text-gray-500 hover:text-gray-700 select-none">
+                <span class="text-xs font-medium truncate max-w-[80px]">
+                  {{ selectedCategoryName || 'All' }}
+                </span>
+                <span class="material-symbols-outlined text-[16px] transition-transform duration-200" :class="{ 'rotate-180': isCategoryFilterOpen }">
+                  arrow_drop_down
+                </span>
+              </div>
+
+              <!-- Dropdown popup -->
+              <div
+                v-if="isCategoryFilterOpen"
+                class="absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 max-h-48 overflow-y-auto"
+              >
+                <!-- Clear Option -->
+                <div
+                  @click="selectCategoryFilter(null)"
+                  :class="[
+                    'px-3 py-1.5 text-xs cursor-pointer transition-colors flex items-center justify-between',
+                    !selectedCategoryFilterId
+                      ? 'bg-primary/10 text-primary font-semibold'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  ]"
+                >
+                  <span>All Categories</span>
+                  <span v-if="!selectedCategoryFilterId" class="material-symbols-outlined text-[14px]">check</span>
+                </div>
+                <!-- Dynamic categories fetched from API -->
+                <div
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  @click="selectCategoryFilter(cat)"
+                  :class="[
+                    'px-3 py-1.5 text-xs cursor-pointer transition-colors flex items-center justify-between',
+                    selectedCategoryFilterId === cat.id
+                      ? 'bg-primary/10 text-primary font-semibold'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  ]"
+                >
+                  <span class="truncate">{{ cat.name }}</span>
+                  <span v-if="selectedCategoryFilterId === cat.id" class="material-symbols-outlined text-[14px]">check</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -75,24 +118,65 @@
             <span class="material-symbols-outlined text-[22px]">notifications</span>
             <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
           </button>
-          <button
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer">
+          <router-link
+            to="/favorites"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
+          >
             <span class="material-symbols-outlined text-[22px]">favorite</span>
-          </button>
+          </router-link>
 
           <!-- Header Logout/Login Actions -->
       
           
 
-          <router-link to="/profile"
-            class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
-            <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
-              class="w-8 h-8 rounded-full object-cover border border-gray-200" />
-            <span class="hidden md:inline text-sm font-medium text-gray-800">
-              {{ authStore.user ? authStore.user.name : 'Mr. Jhone' }}
-            </span>
-            <span class="material-symbols-outlined text-[18px] text-gray-400">arrow_drop_down</span>
-          </router-link>
+          <!-- Profile Dropdown -->
+          <div class="relative" ref="profileDropdownRef">
+            <button
+              type="button"
+              @click="isProfileDropdownOpen = !isProfileDropdownOpen"
+              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none"
+            >
+              <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
+                class="w-8 h-8 rounded-full object-cover border border-gray-200" />
+              <span class="hidden md:inline text-sm font-medium text-gray-800">
+                {{ authStore.user?.name || 'User' }}
+              </span>
+              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isProfileDropdownOpen }">
+                arrow_drop_down
+              </span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              v-if="isProfileDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
+            >
+              <div class="px-4 py-2 border-b border-gray-50">
+                <p class="text-xs text-gray-400">Signed in as</p>
+                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
+              </div>
+
+              <router-link
+                to="/profile"
+                @click="isProfileDropdownOpen = false"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
+              >
+                <span class="material-symbols-outlined text-[18px]">account_circle</span>
+                <span>My Profile</span>
+              </router-link>
+
+              <div class="border-t border-gray-50 my-1"></div>
+
+              <button
+                type="button"
+                @click="triggerLogoutFromDropdown"
+                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none"
+              >
+                <span class="material-symbols-outlined text-[18px]">logout</span>
+                <span>Logout</span>
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -200,10 +284,16 @@
                 {{ stripHtmlTags(post.content) }}
               </p>
 
-              <div v-if="post.tags && post.tags.length" class="flex flex-wrap gap-1 mb-3">
-                <span v-for="tag in post.tags" :key="tag.id"
-                  class="text-[10px] bg-blue-50 text-primary px-2 py-0.5 rounded-full">
+              <div v-if="post.tags && post.tags.length" class="flex flex-wrap gap-1 mb-3 items-center">
+                <span v-for="tag in post.tags.slice(0, 3)" :key="tag.id"
+                  class="text-[10px] bg-blue-50 text-primary px-2 py-0.5 rounded-full whitespace-nowrap">
                   #{{ tag.name }}
+                </span>
+                <span v-if="post.tags.length > 3"
+                  class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full whitespace-nowrap font-semibold"
+                  :title="post.tags.slice(3).map(t => '#' + t.name).join(', ')"
+                >
+                  +{{ post.tags.length - 3 }}
                 </span>
               </div>
 
@@ -258,9 +348,9 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '@/api/api'
+import api, { getAllCategories } from '@/api/api'
 import { useAuthStore } from '@/stores/authStore'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { resolveAvatarUrl } from '@/utils/avatar'
@@ -271,6 +361,49 @@ const authStore = useAuthStore()
 const showLogoutModal = ref(false)
 const logoutLoading = ref(false)
 const navigatingToId = ref(null)
+
+const isProfileDropdownOpen = ref(false)
+const profileDropdownRef = ref(null)
+
+const triggerLogoutFromDropdown = () => {
+  isProfileDropdownOpen.value = false
+  handleLogout()
+}
+
+const isCategoryFilterOpen = ref(false)
+const categoryFilterRef = ref(null)
+const categories = ref([])
+const selectedCategoryFilterId = ref(null)
+const selectedCategoryName = ref('')
+
+const selectCategoryFilter = (cat) => {
+  if (cat) {
+    selectedCategoryFilterId.value = cat.id
+    selectedCategoryName.value = cat.name
+  } else {
+    selectedCategoryFilterId.value = null
+    selectedCategoryName.value = ''
+  }
+  isCategoryFilterOpen.value = false
+  visibleCount.value = 6
+}
+
+const handleClickOutside = (e) => {
+  if (profileDropdownRef.value && !profileDropdownRef.value.contains(e.target)) {
+    isProfileDropdownOpen.value = false
+  }
+  if (categoryFilterRef.value && !categoryFilterRef.value.contains(e.target)) {
+    isCategoryFilterOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 // fallbackAvatar is now handled inside resolveAvatarUrl (src/utils/avatar.js)
 
@@ -312,7 +445,7 @@ const loadMore = () => {
 
 const goToDetail = (id) => {
   navigatingToId.value = id
-  router.push(`/post/${id}`)
+  router.push({ path: `/post/${id}`, query: { from: 'dashboard' } })
 }
 
 const hasMore = computed(() => {
@@ -324,10 +457,17 @@ watch(searchQuery, () => {
 })
 
 const filteredPosts = computed(() => {
-  if (!searchQuery.value.trim()) return blogs.value
+  let list = blogs.value
+
+  // Filter by category dropdown select
+  if (selectedCategoryFilterId.value) {
+    list = list.filter(post => String(post.category_id) === String(selectedCategoryFilterId.value))
+  }
+
+  if (!searchQuery.value.trim()) return list
 
   const query = searchQuery.value.toLowerCase().trim()
-  return blogs.value.filter((post) => (
+  return list.filter((post) => (
     post.title?.toLowerCase().includes(query) ||
     post.content?.toLowerCase().includes(query) ||
     post.category_name?.toLowerCase().includes(query) ||
@@ -349,14 +489,18 @@ const fetchData = async () => {
   const delay = new Promise(resolve => setTimeout(resolve, 800))
 
   try {
-    const [res] = await Promise.all([
+    const [blogRes, catRes] = await Promise.all([
       api.get('/get-all-blogs').catch(() => null),
+      getAllCategories().catch(() => null),
       delay
     ])
-    if (res?.data?.success && res.data.data?.length) {
-      blogs.value = res.data.data
+    if (blogRes?.data?.success && blogRes.data.data?.length) {
+      blogs.value = blogRes.data.data
     } else {
       blogs.value = mockBlogs
+    }
+    if (catRes?.data?.data) {
+      categories.value = catRes.data.data
     }
   } catch {
     blogs.value = mockBlogs
