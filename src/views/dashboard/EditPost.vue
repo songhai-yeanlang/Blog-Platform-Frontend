@@ -68,13 +68,7 @@
         </div>
 
         <div class="flex items-center gap-1">
-          <button
-            type="button"
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative border-none bg-transparent"
-          >
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
+          <NotificationBell />
           <router-link
             to="/favorites"
             class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
@@ -104,18 +98,13 @@
               v-if="isProfileDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
             >
-              <div class="px-4 py-2 border-b border-gray-50">
-                <p class="text-xs text-gray-400">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
-              </div>
-
               <router-link
                 to="/profile"
                 @click="isProfileDropdownOpen = false"
                 class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
               >
-                <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>My Profile</span>
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                <span>Setting</span>
               </router-link>
 
               <div class="border-t border-gray-50 my-1"></div>
@@ -418,6 +407,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { getAllCategories, getAllTags, updateBlog } from '@/api/api'
 import api from '@/api/api'
 import { resolveAvatarUrl } from '@/utils/avatar'
+import NotificationBell from '@/components/dashboard/NotificationBell.vue'
 
 const router = useRouter()
 const route = useRoute()

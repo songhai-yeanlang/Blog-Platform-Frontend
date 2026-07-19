@@ -5,9 +5,7 @@
         <div v-if="show" class="bg-white rounded-2xl max-w-sm w-full shadow-xl border border-gray-100 overflow-hidden">
           <div class="p-6 text-center">
             <!-- Icon/Visual -->
-            <div class="mx-auto w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500 mb-4 animate-bounce-subtle">
-              <span class="material-symbols-outlined text-[26px]">logout</span>
-            </div>
+          
             
             <h3 class="text-lg font-bold text-gray-900 mb-2">{{ title }}</h3>
             <p class="text-sm text-gray-500 leading-relaxed">{{ message }}</p>

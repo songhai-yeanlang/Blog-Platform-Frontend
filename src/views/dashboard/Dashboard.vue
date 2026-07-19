@@ -60,7 +60,7 @@
           <div
             class="flex items-center h-9 rounded-full border border-gray-200 bg-gray-50 px-3 gap-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
             <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
-            <input type="text" v-model="searchQuery" placeholder="React, PHP, JS"
+            <input type="text" v-model="searchQuery" placeholder="Search hers ...."
               class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-gray-800 placeholder-gray-400 h-full p-0 outline-none" />
             <div class="relative" ref="categoryFilterRef">
               <div
@@ -113,11 +113,7 @@
         </div>
 
         <div class="flex items-center gap-1">
-          <button
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative">
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
+          <NotificationBell />
           <router-link
             to="/favorites"
             class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
@@ -151,18 +147,13 @@
               v-if="isProfileDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
             >
-              <div class="px-4 py-2 border-b border-gray-50">
-                <p class="text-xs text-gray-400">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
-              </div>
-
               <router-link
                 to="/profile"
                 @click="isProfileDropdownOpen = false"
                 class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
               >
-                <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>My Profile</span>
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                <span>Setting</span>
               </router-link>
 
               <div class="border-t border-gray-50 my-1"></div>
@@ -237,81 +228,15 @@
         </div>
 
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <article v-for="post in paginatedPosts" :key="post.id" @click="goToDetail(post.id)"
-            class="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer group border border-gray-100 flex flex-col">
-            <!-- Card-click loading overlay -->
-            <div
-              v-if="navigatingToId === post.id"
-              class="absolute inset-0 z-20 bg-white/70 backdrop-blur-xs flex items-center justify-center rounded-xl"
-            >
-              <svg class="animate-spin h-7 w-7 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-            </div>
-            <div class="relative h-48 overflow-hidden">
-              <span v-if="post.category_name"
-                class="absolute top-3 left-3 z-10 bg-primary text-white text-[10px] font-bold px-2.5 py-0.5 rounded-sm tracking-widest uppercase">
-               {{ post.category_name }}
-              </span>
-              
-              <button @click.stop="toggleFavorite(post.id)"
-                class="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/80 backdrop-blur-xs flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-white shadow-sm transition-all border-none outline-none cursor-pointer">
-                <span class="material-symbols-outlined text-[14px]"
-                  :class="{ 'fill-icon text-red-500': isFavorite(post.id) }">
-                  favorite
-                </span>
-              </button>
-              <img :src="resolveBlogImageUrl(post.image)" :alt="post.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            </div>
-
-            <div class="p-4 flex flex-col flex-1">
-              <div class="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-400 mb-1.5">
-                
-              
-                <span>{{ formatDate(post.created_at) }}</span>
-                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                <div class="flex items-center gap-0.5">
-                  <span class="material-symbols-outlined text-[11px] leading-none select-none">visibility</span>
-                  <span class="leading-none">{{ post.views ?? 0 }} views</span>
-                </div>
-              </div>
-              <h3 class="font-semibold text-primary text-sm leading-snug mb-1.5 line-clamp-2">
-                {{ post.title }}
-              </h3>
-              <p class="text-gray-400 text-[12px] line-clamp-2 mb-3 leading-normal flex-1">
-                {{ stripHtmlTags(post.content) }}
-              </p>
-
-              <div v-if="post.tags && post.tags.length" class="flex flex-wrap gap-1 mb-3 items-center">
-                <span v-for="tag in post.tags.slice(0, 3)" :key="tag.id"
-                  class="text-[10px] bg-blue-50 text-primary px-2 py-0.5 rounded-full whitespace-nowrap">
-                  #{{ tag.name }}
-                </span>
-                <span v-if="post.tags.length > 3"
-                  class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full whitespace-nowrap font-semibold"
-                  :title="post.tags.slice(3).map(t => '#' + t.name).join(', ')"
-                >
-                  +{{ post.tags.length - 3 }}
-                </span>
-              </div>
-
-              <div class="flex items-center gap-2 pt-2.5 border-t border-gray-100 mt-auto">
-                <div
-                  class="w-7 h-7 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0">
-                  <img v-if="post.author_avatar" :src="resolveAvatarUrl(post.author_avatar)"
-                    class="w-full h-full object-cover" alt="author" />
-                  <span v-else class="text-xs font-bold text-primary uppercase">
-                    {{ post.author_name ? post.author_name[0] : 'A' }}
-                  </span>
-                </div>
-                <div>
-                  <p class="text-xs font-medium text-gray-800 leading-none">{{ post.author_name || 'Anonymous' }}</p>
-                </div>
-              </div>
-            </div>
-          </article>
+          <BaseCard
+            v-for="post in paginatedPosts"
+            :key="post.id"
+            :post="post"
+            :is-favorite="isFavorite(post.id)"
+            :navigating="navigatingToId === post.id"
+            @click-card="goToDetail"
+            @toggle-favorite="toggleFavorite"
+          />
         </div>
 
         <!-- Load More Button -->
@@ -354,6 +279,8 @@ import api, { getAllCategories } from '@/api/api'
 import { useAuthStore } from '@/stores/authStore'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { resolveAvatarUrl } from '@/utils/avatar'
+import BaseCard from '@/components/base/BaseCard.vue'
+import NotificationBell from '@/components/dashboard/NotificationBell.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

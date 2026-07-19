@@ -31,6 +31,7 @@ export const uploadAvatar = (file) => {
 }
 
 export const changePassword = (payload) => api.post('/auth/change-password', payload)
+export const getUserProfileById = (id) => api.get(`/get-user/${id}`)
 
 // Blog Post API endpoints
 export const getAllCategories = () => api.get('/get-all-categories')
@@ -41,5 +42,18 @@ export const createBlog = (formData) => api.post('/create-blog', formData, {
 export const updateBlog = (id, formData) => api.put(`/update-blog/${id}`, formData, {
   headers: { 'Content-Type': 'multipart/form-data' },
 })
+
+// Notification API endpoints
+export const getNotifications = () => api.get('/notifications')
+export const getUnreadCount = () => api.get('/notifications/unread-count')
+export const markAsRead = (id) => api.patch(`/notifications/${id}/read`)
+export const markAllAsRead = () => api.patch('/notifications/mark-all-read')
+export const deleteNotification = (id) => api.delete(`/notifications/${id}`)
+
+// Comment API endpoints
+export const createComment = (payload) => api.post('/create-comment', payload)
+export const updateComment = (id, payload) => api.put(`/update-comment/${id}`, payload)
+export const getAllComments = (postId) => api.get(`/get-all-comment/${postId}`)
+export const deleteComment = (id) => api.delete(`/delete-comment/${id}`)
 
 export default api;

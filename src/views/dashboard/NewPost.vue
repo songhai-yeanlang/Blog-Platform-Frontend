@@ -28,17 +28,16 @@
           <span>My Blogs</span>
         </router-link>
 
-      
+
       </nav>
 
       <div class="px-3 pb-5">
-        <router-link to="/about-us"
-          :class="[
-            'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
-            $route.path === '/about-us'
-              ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
-              : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
-          ]">
+        <router-link to="/about-us" :class="[
+          'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
+          $route.path === '/about-us'
+            ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
+            : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
+        ]">
           <span class="material-symbols-outlined text-[20px]">info</span>
           <span>About Us</span>
         </router-link>
@@ -46,12 +45,14 @@
     </aside>
 
     <!-- Mobile overlay -->
-    <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/30 z-30 md:hidden"></div>
+    <div v-if="isMobileMenuOpen" @click="isMobileMenuOpen = false" class="fixed inset-0 bg-black/30 z-30 md:hidden">
+    </div>
 
     <!-- Main content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Header -->
-      <header class="flex items-center justify-between px-6 h-16 bg-white border-b border-gray-100 shrink-0 sticky top-0 z-20 gap-4">
+      <header
+        class="flex items-center justify-between px-6 h-16 bg-white border-b border-gray-100 shrink-0 sticky top-0 z-20 gap-4">
         <div class="flex items-center gap-3">
           <button @click="isMobileMenuOpen = !isMobileMenuOpen"
             class="md:hidden text-gray-500 p-1.5 rounded-lg hover:bg-gray-100 cursor-pointer">
@@ -64,63 +65,40 @@
         </div>
 
         <div class="flex items-center gap-1">
-          <button
-            type="button"
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative border-none bg-transparent"
-          >
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
-          <router-link
-            to="/favorites"
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
-          >
+          <NotificationBell />
+          <router-link to="/favorites"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer">
             <span class="material-symbols-outlined text-[22px]">favorite</span>
           </router-link>
 
           <!-- Profile Dropdown -->
           <div class="relative" ref="profileDropdownRef">
-            <button
-              type="button"
-              @click="isProfileDropdownOpen = !isProfileDropdownOpen"
-              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none"
-            >
+            <button type="button" @click="isProfileDropdownOpen = !isProfileDropdownOpen"
+              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none">
               <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
                 class="w-8 h-8 rounded-full object-cover border border-gray-200" />
               <span class="hidden md:inline text-sm font-medium text-gray-800">
                 {{ authStore.user?.name || 'User' }}
               </span>
-              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isProfileDropdownOpen }">
+              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200"
+                :class="{ 'rotate-180': isProfileDropdownOpen }">
                 arrow_drop_down
               </span>
             </button>
 
             <!-- Dropdown Menu -->
-            <div
-              v-if="isProfileDropdownOpen"
-              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
-            >
-              <div class="px-4 py-2 border-b border-gray-50">
-                <p class="text-xs text-gray-400">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
-              </div>
-
-              <router-link
-                to="/profile"
-                @click="isProfileDropdownOpen = false"
-                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
-              >
-                <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>My Profile</span>
+            <div v-if="isProfileDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in">
+              <router-link to="/profile" @click="isProfileDropdownOpen = false"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                <span>Setting</span>
               </router-link>
 
               <div class="border-t border-gray-50 my-1"></div>
 
-              <button
-                type="button"
-                @click="triggerLogoutFromDropdown"
-                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none"
-              >
+              <button type="button" @click="triggerLogoutFromDropdown"
+                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none">
                 <span class="material-symbols-outlined text-[18px]">logout</span>
                 <span>Logout</span>
               </button>
@@ -137,53 +115,42 @@
             <!-- Cover image upload -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               <label class="block cursor-pointer group" for="post-image">
-                <div
-                  v-if="!imagePreview"
-                  class="flex flex-col items-center justify-center h-56 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-dashed border-blue-200 rounded-2xl m-0 transition-all group-hover:border-primary group-hover:bg-blue-50"
-                >
-                  <span class="material-symbols-outlined text-[40px] text-blue-300 mb-2 group-hover:text-primary transition-colors">add_photo_alternate</span>
-                  <p class="text-sm font-medium text-gray-500 group-hover:text-primary transition-colors">Click to upload a cover image</p>
+                <div v-if="!imagePreview"
+                  class="flex flex-col items-center justify-center h-56 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-dashed border-blue-200 rounded-2xl m-0 transition-all group-hover:border-primary group-hover:bg-blue-50">
+                  <span
+                    class="material-symbols-outlined text-[40px] text-blue-300 mb-2 group-hover:text-primary transition-colors">add_photo_alternate</span>
+                  <p class="text-sm font-medium text-gray-500 group-hover:text-primary transition-colors">Click to
+                    upload a cover image</p>
                   <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP up to 5MB</p>
                 </div>
                 <div v-else class="relative h-56 group">
                   <img :src="imagePreview" alt="Cover preview" class="w-full h-full object-cover" />
-                  <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                  <div
+                    class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
                     <span class="material-symbols-outlined text-white text-[36px]">edit</span>
                     <span class="text-white text-sm font-medium ml-2">Change Image</span>
                   </div>
                 </div>
               </label>
-              <input
-                id="post-image"
-                type="file"
-                accept="image/*"
-                class="hidden"
-                @change="onImageChange"
-              />
+              <input id="post-image" type="file" accept="image/*" class="hidden" @change="onImageChange" />
             </div>
 
             <!-- Title -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Post Title <span class="text-red-400">*</span></label>
-              <input
-                v-model="form.title"
-                type="text"
-                placeholder="Enter an engaging title..."
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Post Title <span
+                  class="text-red-400">*</span></label>
+              <input v-model="form.title" type="text" placeholder="Enter an engaging title..."
                 class="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-base placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
-                required
-              />
+                required />
             </div>
 
             <!-- Content -->
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Content <span class="text-red-400">*</span></label>
-              <textarea
-                v-model="form.content"
-                placeholder="Write your blog post content here..."
-                rows="14"
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Content <span
+                  class="text-red-400">*</span></label>
+              <textarea v-model="form.content" placeholder="Write your blog post content here..." rows="14"
                 class="w-full px-4 py-3 rounded-xl border border-gray-200 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all resize-y leading-relaxed"
-                required
-              ></textarea>
+                required></textarea>
               <p class="text-xs text-gray-400 mt-2 text-right">{{ form.content.length }} characters</p>
             </div>
 
@@ -191,69 +158,52 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <!-- Category -->
               <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Category <span class="text-red-400">*</span></label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Category <span
+                    class="text-red-400">*</span></label>
                 <div v-if="categoriesLoading" class="h-11 bg-gray-100 rounded-xl animate-pulse"></div>
                 <div v-else class="relative" ref="categoryDropdownRef">
                   <!-- Dropdown Trigger -->
-                  <button
-                    type="button"
-                    @click="isCategoryDropdownOpen = !isCategoryDropdownOpen"
-                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer text-left"
-                  >
+                  <button type="button" @click="isCategoryDropdownOpen = !isCategoryDropdownOpen"
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer text-left">
                     <span :class="selectedCategoryName ? 'text-gray-900 font-medium' : 'text-gray-500'">
                       {{ selectedCategoryName || 'Select a category...' }}
                     </span>
-                    <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isCategoryDropdownOpen }">
+                    <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200"
+                      :class="{ 'rotate-180': isCategoryDropdownOpen }">
                       keyboard_arrow_down
                     </span>
                   </button>
 
                   <!-- Dropdown Content -->
-                  <div
-                    v-if="isCategoryDropdownOpen"
-                    class="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1.5"
-                  >
+                  <div v-if="isCategoryDropdownOpen"
+                    class="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1.5">
                     <!-- Search Input -->
                     <div class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
                       <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
-                      <input
-                        type="text"
-                        v-model="categorySearchQuery"
-                        placeholder="Search category..."
-                        class="flex-1 bg-transparent border-none text-xs text-gray-800 outline-none p-0 focus:ring-0 focus:outline-none"
-                      />
-                      <button
-                        v-if="categorySearchQuery"
-                        type="button"
-                        @click="categorySearchQuery = ''"
-                        class="text-gray-400 hover:text-gray-600 text-xs border-none bg-transparent cursor-pointer"
-                      >
+                      <input type="text" v-model="categorySearchQuery" placeholder="Search category..."
+                        class="flex-1 bg-transparent border-none text-xs text-gray-800 outline-none p-0 focus:ring-0 focus:outline-none" />
+                      <button v-if="categorySearchQuery" type="button" @click="categorySearchQuery = ''"
+                        class="text-gray-400 hover:text-gray-600 text-xs border-none bg-transparent cursor-pointer">
                         ×
                       </button>
                     </div>
 
                     <!-- Options List -->
                     <div class="max-h-40 overflow-y-auto flex flex-col gap-1">
-                      <div
-                        v-for="cat in filteredCategories"
-                        :key="cat.id"
-                        @click="selectCategory(cat.id)"
-                        :class="[
-                          'px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors flex items-center justify-between',
-                          String(form.category_id) === String(cat.id)
-                            ? 'bg-primary/10 text-primary font-semibold'
-                            : 'text-gray-700 hover:bg-blue-50/50 hover:text-primary'
-                        ]"
-                      >
+                      <div v-for="cat in filteredCategories" :key="cat.id" @click="selectCategory(cat.id)" :class="[
+                        'px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors flex items-center justify-between',
+                        String(form.category_id) === String(cat.id)
+                          ? 'bg-primary/10 text-primary font-semibold'
+                          : 'text-gray-700 hover:bg-blue-50/50 hover:text-primary'
+                      ]">
                         <span>{{ cat.name }}</span>
-                        <span
-                          v-if="String(form.category_id) === String(cat.id)"
-                          class="material-symbols-outlined text-[16px] text-primary"
-                        >
+                        <span v-if="String(form.category_id) === String(cat.id)"
+                          class="material-symbols-outlined text-[16px] text-primary">
                           check
                         </span>
                       </div>
-                      <p v-if="filteredCategories.length === 0" class="text-xs text-gray-400 py-3 text-center">No categories found.</p>
+                      <p v-if="filteredCategories.length === 0" class="text-xs text-gray-400 py-3 text-center">No
+                        categories found.</p>
                     </div>
                   </div>
                 </div>
@@ -265,77 +215,52 @@
                 <div v-if="tagsLoading" class="h-11 bg-gray-100 rounded-xl animate-pulse"></div>
                 <div v-else class="relative" ref="tagsDropdownRef">
                   <!-- Dropdown Trigger -->
-                  <button
-                    type="button"
-                    @click="isTagsDropdownOpen = !isTagsDropdownOpen"
-                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer text-left"
-                  >
+                  <button type="button" @click="isTagsDropdownOpen = !isTagsDropdownOpen"
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 text-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer text-left">
                     <span class="text-gray-500">
                       {{ selectedTags.length ? `${selectedTags.length} tag(s) selected` : 'Select tags...' }}
                     </span>
-                    <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isTagsDropdownOpen }">
+                    <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200"
+                      :class="{ 'rotate-180': isTagsDropdownOpen }">
                       keyboard_arrow_down
                     </span>
                   </button>
 
                   <!-- Dropdown Content -->
                   <!-- Dropdown Content -->
-                  <div
-                    v-if="isTagsDropdownOpen"
-                    class="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1.5"
-                  >
+                  <div v-if="isTagsDropdownOpen"
+                    class="absolute left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-xl shadow-lg p-2 flex flex-col gap-1.5">
                     <!-- Search Input -->
                     <div class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-100 bg-gray-50">
                       <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
-                      <input
-                        type="text"
-                        v-model="tagSearchQuery"
-                        placeholder="Search tag..."
-                        class="flex-1 bg-transparent border-none text-xs text-gray-800 outline-none p-0 focus:ring-0 focus:outline-none"
-                      />
-                      <button
-                        v-if="tagSearchQuery"
-                        type="button"
-                        @click="tagSearchQuery = ''"
-                        class="text-gray-400 hover:text-gray-600 text-xs border-none bg-transparent cursor-pointer"
-                      >
+                      <input type="text" v-model="tagSearchQuery" placeholder="Search tag..."
+                        class="flex-1 bg-transparent border-none text-xs text-gray-800 outline-none p-0 focus:ring-0 focus:outline-none" />
+                      <button v-if="tagSearchQuery" type="button" @click="tagSearchQuery = ''"
+                        class="text-gray-400 hover:text-gray-600 text-xs border-none bg-transparent cursor-pointer">
                         ×
                       </button>
                     </div>
 
                     <!-- Options List -->
                     <div class="max-h-40 overflow-y-auto flex flex-col gap-1">
-                      <div
-                        v-for="tag in filteredTags"
-                        :key="tag.id"
-                        @click="toggleTag(tag.id)"
-                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-blue-50/50 hover:text-primary cursor-pointer transition-colors"
-                      >
-                        <input
-                          type="checkbox"
-                          :checked="selectedTags.includes(tag.id)"
-                          @click.stop="toggleTag(tag.id)"
-                          class="rounded text-primary focus:ring-primary h-4 w-4 cursor-pointer"
-                        />
+                      <div v-for="tag in filteredTags" :key="tag.id" @click="toggleTag(tag.id)"
+                        class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-blue-50/50 hover:text-primary cursor-pointer transition-colors">
+                        <input type="checkbox" :checked="selectedTags.includes(tag.id)" @click.stop="toggleTag(tag.id)"
+                          class="rounded text-primary focus:ring-primary h-4 w-4 cursor-pointer" />
                         <span class="font-medium">{{ tag.name }}</span>
                       </div>
-                      <p v-if="filteredTags.length === 0" class="text-xs text-gray-400 py-3 text-center">No tags found.</p>
+                      <p v-if="filteredTags.length === 0" class="text-xs text-gray-400 py-3 text-center">No tags found.
+                      </p>
                     </div>
                   </div>
 
                   <!-- Selected Tags Pills -->
                   <div v-if="selectedTags.length" class="flex flex-wrap gap-1.5 mt-3">
-                    <div
-                      v-for="tagId in selectedTags"
-                      :key="tagId"
-                      class="flex items-center gap-1.5 pl-3 pr-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20"
-                    >
-                      <span>#{{ tags.find(t => t.id === tagId)?.name || 'Tag' }}</span>
-                      <button
-                        type="button"
-                        @click="toggleTag(tagId)"
-                        class="hover:bg-primary/20 rounded-full w-4 h-4 flex items-center justify-center transition-colors text-[10px] cursor-pointer border-none bg-transparent"
-                      >
+                    <div v-for="tagId in selectedTags" :key="tagId"
+                      class="flex items-center gap-1.5 pl-3 pr-2 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20">
+                      <span>#{{tags.find(t => t.id === tagId)?.name || 'Tag'}}</span>
+                      <button type="button" @click="toggleTag(tagId)"
+                        class="hover:bg-primary/20 rounded-full w-4 h-4 flex items-center justify-center transition-colors text-[10px] cursor-pointer border-none bg-transparent">
                         ×
                       </button>
                     </div>
@@ -345,7 +270,8 @@
             </div>
 
             <!-- Error message -->
-            <div v-if="errorMsg" class="flex items-center gap-3 bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
+            <div v-if="errorMsg"
+              class="flex items-center gap-3 bg-red-50 border border-red-200 text-red-600 rounded-xl px-4 py-3 text-sm">
               <span class="material-symbols-outlined text-[20px]">error</span>
               <span>{{ errorMsg }}</span>
             </div>
@@ -356,12 +282,10 @@
                 class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">
                 Cancel
               </router-link>
-              <button
-                type="submit"
-                :disabled="submitting"
-                class="px-8 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                <span v-if="submitting" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+              <button type="submit" :disabled="submitting"
+                class="px-8 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold shadow-sm hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center gap-2">
+                <span v-if="submitting"
+                  class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
                 <span class="material-symbols-outlined text-[18px]" v-else>publish</span>
                 {{ submitting ? 'Publishing...' : 'Publish Post' }}
               </button>
@@ -373,7 +297,8 @@
     </div>
 
     <!-- Logout confirm modal -->
-    <div v-if="showLogoutModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div v-if="showLogoutModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div class="bg-white rounded-2xl shadow-2xl p-7 w-full max-w-sm mx-4 flex flex-col items-center gap-4">
         <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center">
           <span class="material-symbols-outlined text-red-500 text-[32px]">logout</span>
@@ -389,7 +314,8 @@
           </button>
           <button @click="confirmLogout" :disabled="logoutLoading"
             class="flex-1 py-2.5 rounded-xl bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2">
-            <span v-if="logoutLoading" class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+            <span v-if="logoutLoading"
+              class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
             Log out
           </button>
         </div>
@@ -406,6 +332,7 @@ import { useToastStore } from '@/stores/toastStore'
 import { getAllCategories, getAllTags, createBlog } from '@/api/api'
 import api from '@/api/api'
 import { resolveAvatarUrl } from '@/utils/avatar'
+import NotificationBell from '@/components/dashboard/NotificationBell.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

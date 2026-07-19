@@ -81,7 +81,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import api from '@/api/api'
-import '@/assets/auth.css'
+import '@/assets/css/auth.css'
 import { EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
 
 const REMEMBER_KEY = 'login_remember_email'

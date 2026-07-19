@@ -69,7 +69,7 @@
 import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/api/api'
-import '@/assets/auth.css'
+import '@/assets/css/auth.css'
 import { UserIcon, EnvelopeIcon, LockClosedIcon, EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()

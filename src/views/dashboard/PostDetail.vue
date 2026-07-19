@@ -6,17 +6,16 @@
       isMobileMenuOpen ? 'translate-x-0 w-60' : '-translate-x-full md:w-60'
     ]">
       <div class="flex items-center gap-2 px-5 py-6">
-        <span class="font-bold text-lg text-gray-900 tracking-tight">Blog-Post</span>
+        <span class="font-bold text-lg text-gray-900 tracking-tight">Blog-Platform</span>
       </div>
 
       <nav class="flex-1 px-3 flex flex-col gap-1">
-        <router-link to="/dashboard"
-          :class="[
-            'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors',
-            route.query.from === 'dashboard'
-              ? 'bg-primary text-white font-medium shadow-sm'
-              : 'text-gray-500 hover:bg-blue-50 hover:text-primary'
-          ]">
+        <router-link to="/dashboard" :class="[
+          'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors',
+          route.query.from === 'dashboard'
+            ? 'bg-primary text-white font-medium shadow-sm'
+            : 'text-gray-500 hover:bg-blue-50 hover:text-primary'
+        ]">
           <span class="material-symbols-outlined text-[20px]">grid_view</span>
           <span>Dashboard</span>
         </router-link>
@@ -27,37 +26,26 @@
           <span>New Post</span>
         </router-link>
 
-        <router-link to="/my-posts"
-          :class="[
-            'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors',
-            route.query.from === 'my-posts'
-              ? 'bg-primary text-white font-medium shadow-sm'
-              : 'text-gray-500 hover:bg-blue-50 hover:text-primary'
-          ]">
+        <router-link to="/my-posts" :class="[
+          'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors',
+          route.query.from === 'my-posts'
+            ? 'bg-primary text-white font-medium shadow-sm'
+            : 'text-gray-500 hover:bg-blue-50 hover:text-primary'
+        ]">
           <span class="material-symbols-outlined text-[20px]">description</span>
           <span>My Blogs</span>
         </router-link>
 
-        <router-link to="/favorites"
-          :class="[
-            'flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors',
-            route.query.from === 'favorites'
-              ? 'bg-primary text-white font-medium shadow-sm'
-              : 'text-gray-500 hover:bg-blue-50 hover:text-primary'
-          ]">
-          <span class="material-symbols-outlined text-[20px]">favorite</span>
-          <span>Favorites</span>
-        </router-link>
+      
       </nav>
 
       <div class="px-3 pb-5">
-        <router-link to="/about-us"
-          :class="[
-            'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
-            $route.path === '/about-us'
-              ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
-              : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
-          ]">
+        <router-link to="/about-us" :class="[
+          'flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all cursor-pointer w-full text-center',
+          $route.path === '/about-us'
+            ? 'bg-primary border-primary text-white shadow-sm hover:bg-primary/95'
+            : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-primary hover:border-primary/30'
+        ]">
           <span class="material-symbols-outlined text-[20px]">info</span>
           <span>About Us</span>
         </router-link>
@@ -84,15 +72,9 @@
         <div class="flex-1"></div>
 
         <div class="flex items-center gap-1">
-          <button
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative border-none bg-transparent">
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
-          <router-link
-            to="/favorites"
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
-          >
+          <NotificationBell />
+          <router-link to="/favorites"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer">
             <span class="material-symbols-outlined text-[22px]">favorite</span>
           </router-link>
 
@@ -102,47 +84,32 @@
 
           <!-- Profile Dropdown -->
           <div class="relative" ref="profileDropdownRef">
-            <button
-              type="button"
-              @click="isProfileDropdownOpen = !isProfileDropdownOpen"
-              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none"
-            >
+            <button type="button" @click="isProfileDropdownOpen = !isProfileDropdownOpen"
+              class="flex items-center gap-2 pl-3 ml-1 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity border-none bg-transparent outline-none">
               <img :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)" alt="avatar"
                 class="w-8 h-8 rounded-full object-cover border border-gray-200" />
               <span class="hidden md:inline text-sm font-medium text-gray-800">
                 {{ authStore.user?.name || 'User' }}
               </span>
-              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': isProfileDropdownOpen }">
+              <span class="material-symbols-outlined text-[18px] text-gray-400 transition-transform duration-200"
+                :class="{ 'rotate-180': isProfileDropdownOpen }">
                 arrow_drop_down
               </span>
             </button>
 
             <!-- Dropdown Menu -->
-            <div
-              v-if="isProfileDropdownOpen"
-              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
-            >
-              <div class="px-4 py-2 border-b border-gray-50">
-                <p class="text-xs text-gray-400">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
-              </div>
-
-              <router-link
-                to="/profile"
-                @click="isProfileDropdownOpen = false"
-                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
-              >
-                <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>My Profile</span>
+            <div v-if="isProfileDropdownOpen"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in">
+              <router-link to="/profile" @click="isProfileDropdownOpen = false"
+                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                <span>Setting</span>
               </router-link>
 
               <div class="border-t border-gray-50 my-1"></div>
 
-              <button
-                type="button"
-                @click="triggerLogoutFromDropdown"
-                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none"
-              >
+              <button type="button" @click="triggerLogoutFromDropdown"
+                class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50/50 transition-colors border-none bg-transparent text-left cursor-pointer outline-none">
                 <span class="material-symbols-outlined text-[18px]">logout</span>
                 <span>Logout</span>
               </button>
@@ -222,113 +189,239 @@
         </div>
 
         <!-- Details Card matching EditPost visual structure -->
-        <div v-else class="max-w-3xl mx-auto flex flex-col gap-6 animate-fade-in">
-          <!-- Cover image -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="relative h-56 bg-gradient-to-br from-slate-50 to-blue-50">
+        <!-- Side-by-side grid layout -->
+        <div v-else class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6 animate-fade-in items-start">
+          
+          <!-- Left Column: Blog Post Details -->
+          <div class="flex-1 w-full flex flex-col gap-6">
+            <!-- Cover image -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+              <div class="relative h-56 bg-gradient-to-br from-slate-50 to-blue-50">
+                <img v-if="post.image" :src="resolveBlogImageUrl(post.image)" alt="Cover image"
+                  class="w-full h-full object-cover" />
+                <div v-else class="flex flex-col items-center justify-center h-full">
+                  <span class="material-symbols-outlined text-[40px] text-blue-300 mb-2">image</span>
+                  <p class="text-xs text-gray-400">No cover image uploaded</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Author and Stats Row -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <router-link
+                :to="post.author_account_id ? '/user-profile/' + post.author_account_id : '#'"
+                class="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer group/author no-underline"
+              >
+                <div class="w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0">
+                  <img v-if="post.author_avatar" :src="resolveAvatarUrl(post.author_avatar)" class="w-full h-full object-cover" alt="author" />
+                  <span v-else class="text-sm font-bold text-primary uppercase">
+                    {{ post.author_name ? post.author_name[0] : 'A' }}
+                  </span>
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-gray-800 group-hover/author:text-primary transition-colors">
+                    {{ post.author_name || 'Anonymous' }}
+                  </p>
+                  <p class="text-xs text-gray-400 mt-0.5">Author / Contributor</p>
+                </div>
+              </router-link>
+              <div class="flex items-center gap-4 text-xs text-gray-400 font-medium">
+                <div class="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                  <span class="material-symbols-outlined text-[15px]">calendar_today</span>
+                  <span>{{ formatDate(post.created_at) }}</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
+                  <span class="material-symbols-outlined text-[15px]">visibility</span>
+                  <span>{{ post.views ?? 0 }} views</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Title -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-700 mb-2">Post Title</h2>
+              <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 text-base font-semibold">
+                {{ post.title }}
+              </div>
+            </div>
+         
+            <!-- Content -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+              <h2 class="text-sm font-semibold text-gray-700 mb-2">Content</h2>
+              <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 text-sm whitespace-pre-wrap leading-relaxed min-h-[200px]">
+                {{ post.content }}
+              </div>
+            </div>
+
+            <!-- Category & Tags row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Category -->
+              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <h2 class="text-sm font-semibold text-gray-700 mb-2">Category</h2>
+                <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 text-sm font-medium">
+                  {{ post.category_name || 'Uncategorized' }}
+                </div>
+              </div>
+
+              <!-- Tags -->
+              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <h2 class="text-sm font-semibold text-gray-700 mb-2">Tags</h2>
+                <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-wrap gap-2 min-h-[46px] items-center">
+                  <span v-for="tag in post.tags" :key="tag.id"
+                    class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20">
+                    #{{ tag.name }}
+                  </span>
+                  <span v-if="!post.tags || !post.tags.length" class="text-xs text-gray-400">No tags.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="flex items-center justify-end gap-3 pt-2 pb-8">
+              <button @click="goBack"
+                class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer bg-white">
+                Back
+              </button>
+              <router-link v-if="isOwner" :to="`/edit-post/${post.id}`"
+                class="px-8 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">edit</span>
+                <span>Edit Post</span>
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Right Column: Comments Section (Fixed width on desktop) -->
+          <div class="w-full lg:w-96 shrink-0 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col gap-4 sticky top-6">
+            <h2 class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px]">chat_bubble</span>
+              <span>Comments ({{ comments.length }})</span>
+            </h2>
+
+            <!-- Add Comment Form -->
+            <form @submit.prevent="submitComment" class="flex gap-3 items-start">
               <img
-                v-if="post.image"
-                :src="resolveBlogImageUrl(post.image)"
-                alt="Cover image"
-                class="w-full h-full object-cover"
+                :src="resolveAvatarUrl(authStore.user?.avatar, authStore.user?.name)"
+                alt="My Avatar"
+                class="w-8 h-8 rounded-full object-cover border border-gray-200 shrink-0"
               />
-              <div v-else class="flex flex-col items-center justify-center h-full">
-                <span class="material-symbols-outlined text-[40px] text-blue-300 mb-2">image</span>
-                <p class="text-xs text-gray-400">No cover image uploaded</p>
+              <div class="flex-1 flex flex-col gap-2">
+                <textarea
+                  v-model="newCommentText"
+                  placeholder="Add a public comment..."
+                  rows="2"
+                  class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none bg-gray-50/50"
+                  required
+                ></textarea>
+                <div class="flex justify-end">
+                  <button
+                    type="submit"
+                    :disabled="isSubmittingComment || !newCommentText.trim()"
+                    class="px-4 py-1.5 bg-primary text-white text-xs font-semibold rounded-lg shadow-sm hover:bg-primary/95 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5 cursor-pointer border-none"
+                  >
+                    <span v-if="isSubmittingComment" class="animate-spin h-3 w-3 border-2 border-white border-t-transparent rounded-full"></span>
+                    <span v-else class="material-symbols-outlined text-[15px]">send</span>
+                    <span>Post</span>
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
+            </form>
 
-          <!-- Title -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-            <h2 class="text-sm font-semibold text-gray-700 mb-2">Post Title</h2>
-            <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 text-base font-semibold">
-              {{ post.title }}
-            </div>
-          </div>
-
-          <!-- Content -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-            <h2 class="text-sm font-semibold text-gray-700 mb-2">Content</h2>
-            <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 text-sm whitespace-pre-wrap leading-relaxed min-h-[200px]">
-              {{ post.content }}
-            </div>
-          </div>
-
-          <!-- Category & Tags row -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Category -->
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <h2 class="text-sm font-semibold text-gray-700 mb-2">Category</h2>
-              <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-900 text-sm font-medium">
-                {{ post.category_name || 'Uncategorized' }}
-              </div>
-            </div>
-
-            <!-- Tags -->
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <h2 class="text-sm font-semibold text-gray-700 mb-2">Tags</h2>
-              <div class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-wrap gap-2 min-h-[46px] items-center">
-                <span
-                  v-for="tag in post.tags"
-                  :key="tag.id"
-                  class="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full border border-primary/20"
+            <!-- Comments List -->
+            <div v-if="comments.length > 0" class="flex flex-col gap-4 mt-2 divide-y divide-gray-50 max-h-[400px] overflow-y-auto pr-1">
+              <div
+                v-for="comment in comments"
+                :key="comment.id"
+                class="flex gap-3 pt-4 first:pt-0 group relative items-start"
+              >
+                <router-link
+                  :to="comment.author_account_id ? '/user-profile/' + comment.author_account_id : '#'"
+                  class="shrink-0"
                 >
-                  #{{ tag.name }}
-                </span>
-                <span v-if="!post.tags || !post.tags.length" class="text-xs text-gray-400">No tags.</span>
+                  <img
+                    :src="resolveAvatarUrl(comment.author_avatar, comment.author_name)"
+                    alt="Commenter Avatar"
+                    class="w-8 h-8 rounded-full object-cover border border-gray-100"
+                  />
+                </router-link>
+                <div class="flex-1 min-w-0 pr-8">
+                  <div class="flex items-center gap-2">
+                    <router-link
+                      :to="comment.author_account_id ? '/user-profile/' + comment.author_account_id : '#'"
+                      class="text-xs font-bold text-gray-800 hover:text-primary no-underline"
+                    >
+                      {{ comment.author_name || 'Anonymous' }}
+                    </router-link>
+                    <span class="text-[10px] text-gray-400">
+                      {{ formatCommentTime(comment.created_at) }}
+                    </span>
+                  </div>
+                  <!-- Text Content / Edit Field -->
+                  <div v-if="editingCommentId === comment.id" class="mt-1 flex flex-col gap-2">
+                    <textarea
+                      v-model="editingCommentText"
+                      rows="2"
+                      class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none bg-gray-50/50"
+                      required
+                    ></textarea>
+                    <div class="flex gap-2 justify-end">
+                      <button
+                        @click="cancelEditComment"
+                        class="px-3 py-1 border border-gray-200 text-gray-500 rounded-lg text-[10px] font-semibold hover:bg-gray-50 cursor-pointer bg-white"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        @click="submitEditComment(comment.id)"
+                        :disabled="isUpdatingComment || !editingCommentText.trim()"
+                        class="px-3 py-1 bg-primary text-white rounded-lg text-[10px] font-semibold hover:bg-primary/95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer border-none"
+                      >
+                        <span v-if="isUpdatingComment" class="animate-spin h-2.5 w-2.5 border-2 border-white border-t-transparent rounded-full mr-1 inline-block"></span>
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                  <p v-else class="text-xs text-gray-650 mt-1 whitespace-pre-wrap leading-relaxed">
+                    {{ comment.content }}
+                  </p>
+                </div>
+
+                <!-- Action buttons (visible to owner on hover) -->
+                <div v-if="canDeleteComment(comment) && editingCommentId !== comment.id" class="absolute right-0 top-3.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    v-if="canEditComment(comment)"
+                    @click="startEditComment(comment)"
+                    class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-50 text-blue-500 hover:bg-blue-100 cursor-pointer border-none"
+                    title="Edit comment"
+                  >
+                    <span class="material-symbols-outlined text-[15px]">edit</span>
+                  </button>
+                  <button
+                    @click="triggerDeleteComment(comment.id)"
+                    class="w-6 h-6 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-100 cursor-pointer border-none"
+                    title="Delete comment"
+                  >
+                    <span class="material-symbols-outlined text-[15px]">delete</span>
+                  </button>
+                </div>
               </div>
+            </div>
+
+            <!-- Empty State -->
+            <div v-else class="text-center py-6 text-gray-400 flex flex-col items-center gap-1.5">
+              <span class="material-symbols-outlined text-3xl text-gray-300">chat_bubble_outline</span>
+              <p class="text-xs font-semibold">No comments yet</p>
+              <p class="text-[10px] text-gray-400">Be the first to share your thoughts!</p>
             </div>
           </div>
 
-          <!-- Author and Stats Row -->
-          <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full overflow-hidden border border-gray-200 bg-gray-100 flex items-center justify-center shrink-0">
-                <img v-if="post.author_avatar" :src="resolveAvatarUrl(post.author_avatar)" class="w-full h-full object-cover" alt="author" />
-                <span v-else class="text-sm font-bold text-primary uppercase">
-                  {{ post.author_name ? post.author_name[0] : 'A' }}
-                </span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-gray-800">{{ post.author_name || 'Anonymous' }}</p>
-                <p class="text-xs text-gray-400 mt-0.5">Author / Contributor</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-4 text-xs text-gray-400 font-medium">
-              <div class="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
-                <span class="material-symbols-outlined text-[15px]">calendar_today</span>
-                <span>{{ formatDate(post.created_at) }}</span>
-              </div>
-              <div class="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100">
-                <span class="material-symbols-outlined text-[15px]">visibility</span>
-                <span>{{ post.views ?? 0 }} views</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action buttons -->
-          <div class="flex items-center justify-end gap-3 pb-8">
-            <button
-              @click="goBack"
-              class="px-6 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer bg-white"
-            >
-              Back
-            </button>
-            <router-link
-              v-if="isOwner"
-              :to="`/edit-post/${post.id}`"
-              class="px-8 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2"
-            >
-              <span class="material-symbols-outlined text-[18px]">edit</span>
-              <span>Edit Post</span>
-            </router-link>
-          </div>
         </div>
       </main>
       <ConfirmModal :show="showLogoutModal" :loading="logoutLoading" title="Confirm Logout"
         message="Are you sure you want to log out of your account?" confirm-text="Yes" cancel-text="No"
         @confirm="confirmLogout" @cancel="showLogoutModal = false" />
+      <ConfirmModal :show="showDeleteCommentModal" :loading="deleteCommentLoading" title="Delete Comment"
+        message="Are you sure you want to delete this comment?" confirm-text="Delete" cancel-text="Cancel"
+        @confirm="confirmDeleteComment" @cancel="showDeleteCommentModal = false" />
     </div>
   </div>
 </template>
@@ -340,6 +433,7 @@ import api from '@/api/api'
 import { useAuthStore } from '@/stores/authStore'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { resolveAvatarUrl } from '@/utils/avatar'
+import NotificationBell from '@/components/dashboard/NotificationBell.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -347,6 +441,10 @@ const authStore = useAuthStore()
 
 const showLogoutModal = ref(false)
 const logoutLoading = ref(false)
+
+const showDeleteCommentModal = ref(false)
+const deleteCommentLoading = ref(false)
+const commentIdToDelete = ref(null)
 
 const isProfileDropdownOpen = ref(false)
 const profileDropdownRef = ref(null)
@@ -427,6 +525,146 @@ const isOwner = computed(() => {
 
 // resolveAvatarUrl is imported from @/utils/avatar
 
+// Comments State & Logic
+import { createComment, getAllComments, updateComment as apiUpdateComment, deleteComment as apiDeleteComment } from '@/api/api'
+import { useToastStore } from '@/stores/toastStore'
+
+const toastStore = useToastStore()
+const comments = ref([])
+const newCommentText = ref('')
+const isSubmittingComment = ref(false)
+
+// Edit comment states
+const editingCommentId = ref(null)
+const editingCommentText = ref('')
+const isUpdatingComment = ref(false)
+
+const startEditComment = (comment) => {
+  editingCommentId.value = comment.id
+  editingCommentText.value = comment.content
+}
+
+const cancelEditComment = () => {
+  editingCommentId.value = null
+  editingCommentText.value = ''
+}
+
+const submitEditComment = async (commentId) => {
+  if (!editingCommentText.value.trim()) return
+  isUpdatingComment.value = true
+  try {
+    const { data } = await apiUpdateComment(commentId, {
+      content: editingCommentText.value.trim()
+    })
+    if (data.success) {
+      const commentIndex = comments.value.findIndex(c => c.id === commentId)
+      if (commentIndex !== -1) {
+        comments.value[commentIndex].content = data.data.content
+      }
+      cancelEditComment()
+      toastStore.success('Comment updated successfully')
+    }
+  } catch (err) {
+    const msg = err?.response?.data?.message || 'Failed to update comment'
+    toastStore.error(msg)
+  } finally {
+    isUpdatingComment.value = false
+  }
+}
+
+
+const loadComments = async () => {
+  try {
+    const { data } = await getAllComments(route.params.id)
+    if (data.success) {
+      comments.value = data.data
+    }
+  } catch (err) {
+    console.error('Failed to load comments:', err)
+  }
+}
+
+const submitComment = async () => {
+  if (!newCommentText.value.trim()) return
+  isSubmittingComment.value = true
+  try {
+    const { data } = await createComment({
+      post_id: Number(route.params.id),
+      content: newCommentText.value.trim()
+    })
+    if (data.success) {
+      // Append comment locally or reload
+      comments.value.push(data.data)
+      newCommentText.value = ''
+      toastStore.success('Comment posted successfully')
+    }
+  } catch (err) {
+    const msg = err?.response?.data?.message || 'Failed to post comment'
+    toastStore.error(msg)
+  } finally {
+    isSubmittingComment.value = false
+  }
+}
+
+const canDeleteComment = (comment) => {
+  const currentUserId = authStore.user?.user_id || authStore.user?.id
+  const isPostOwner = post.value && currentUserId === post.value.user_id
+  // Allowed if current user is either comment author or post owner
+  return currentUserId && (comment.user_id === currentUserId || isPostOwner)
+}
+
+const canEditComment = (comment) => {
+  const currentUserId = authStore.user?.user_id || authStore.user?.id
+  // Only the author of the comment can edit it
+  return currentUserId && comment.user_id === currentUserId
+}
+
+const triggerDeleteComment = (commentId) => {
+  commentIdToDelete.value = commentId
+  showDeleteCommentModal.value = true
+}
+
+const confirmDeleteComment = async () => {
+  if (!commentIdToDelete.value) return
+  deleteCommentLoading.value = true
+  try {
+    const { data } = await apiDeleteComment(commentIdToDelete.value)
+    if (data.success) {
+      comments.value = comments.value.filter(c => c.id !== commentIdToDelete.value)
+      toastStore.success('Comment deleted')
+      showDeleteCommentModal.value = false
+    }
+  } catch (err) {
+    toastStore.error('Failed to delete comment')
+  } finally {
+    deleteCommentLoading.value = false
+    commentIdToDelete.value = null
+  }
+}
+
+const formatCommentTime = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffMs = now - date
+
+  const diffMins = Math.floor(diffMs / 60000)
+  if (diffMins < 1) return 'Just now'
+  if (diffMins < 60) return `${diffMins}m ago`
+
+  const diffHours = Math.floor(diffMins / 60)
+  if (diffHours < 24) return `${diffHours}h ago`
+
+  const diffDays = Math.floor(diffHours / 24)
+  if (diffDays === 1) return 'Yesterday'
+  if (diffDays < 7) return `${diffDays}d ago`
+
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
+  })
+}
+
 const loadPost = async () => {
   isLoading.value = true
   errorMessage.value = ''
@@ -465,6 +703,8 @@ const loadPost = async () => {
           sessionStorage.setItem(`viewed_post_${postId}`, 'true')
         }
       }
+      // Load comments for this post
+      await loadComments()
     } else {
       post.value = null
     }

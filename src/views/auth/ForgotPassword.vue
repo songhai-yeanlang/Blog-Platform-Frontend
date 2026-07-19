@@ -48,7 +48,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/api/api'
-import '@/assets/auth.css'
+import '@/assets/css/auth.css'
 import { EnvelopeIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()

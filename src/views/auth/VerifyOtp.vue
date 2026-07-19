@@ -50,7 +50,7 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/api/api'
-import '@/assets/auth.css'
+import '@/assets/css/auth.css'
 import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()

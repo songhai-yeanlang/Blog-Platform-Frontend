@@ -61,7 +61,7 @@
           <div
             class="flex items-center h-9 rounded-full border border-gray-200 bg-gray-50 px-3 gap-2 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
             <span class="material-symbols-outlined text-gray-400 text-[18px]">search</span>
-            <input type="text" v-model="searchQuery" placeholder="React, PHP, JS"
+            <input type="text" v-model="searchQuery" placeholder="Search hers ...."
               class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-gray-800 placeholder-gray-400 h-full p-0 outline-none" />
             <div class="relative" ref="categoryFilterRef">
               <div
@@ -114,11 +114,7 @@
         </div>
 
         <div class="flex items-center gap-1">
-          <button
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative">
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
+          <NotificationBell />
           <router-link
             to="/favorites"
             class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer"
@@ -148,18 +144,13 @@
               v-if="isProfileDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
             >
-              <div class="px-4 py-2 border-b border-gray-50">
-                <p class="text-xs text-gray-400">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
-              </div>
-
               <router-link
                 to="/profile"
                 @click="isProfileDropdownOpen = false"
                 class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
               >
-                <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>My Profile</span>
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                <span>Setting</span>
               </router-link>
 
               <div class="border-t border-gray-50 my-1"></div>
@@ -263,85 +254,18 @@
 
         <!-- Posts grid -->
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <article
+          <BaseCard
             v-for="post in paginatedPosts"
             :key="post.id"
-            class="relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 group flex flex-col"
-          >
-            <!-- Cover image -->
-            <div class="relative h-48 overflow-hidden cursor-pointer" @click="goToDetail(post.id)">
-              <div
-                v-if="navigatingToId === post.id"
-                class="absolute inset-0 z-20 bg-white/70 backdrop-blur-sm flex items-center justify-center"
-              >
-                <svg class="animate-spin h-7 w-7 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-              </div>
-              <img
-                :src="resolveBlogImageUrl(post.image)"
-                :alt="post.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <!-- Category badge -->
-              <span v-if="post.category_name"
-                class="absolute top-3 left-3 z-10 bg-primary text-white text-[10px] font-bold px-2.5 py-0.5 rounded-sm tracking-widest uppercase">
-                {{ post.category_name }}
-              </span>
-            </div>
-
-            <!-- Card body -->
-            <div class="p-4 flex flex-col flex-1">
-              <div class="flex flex-wrap items-center gap-1.5 text-[10px] text-gray-400 mb-1.5">
-                <span>{{ formatDate(post.created_at) }}</span>
-                <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                <div class="flex items-center gap-0.5">
-                  <span class="material-symbols-outlined text-[11px] leading-none">visibility</span>
-                  <span>{{ post.views ?? 0 }} views</span>
-                </div>
-              </div>
-
-              <h3 class="font-semibold text-gray-900 text-sm leading-snug mb-1.5 line-clamp-2 cursor-pointer hover:text-primary transition-colors"
-                @click="goToDetail(post.id)">
-                {{ post.title }}
-              </h3>
-              <p class="text-gray-400 text-[12px] line-clamp-2 mb-3 leading-normal flex-1">
-                {{ stripHtmlTags(post.content) }}
-              </p>
-
-              <!-- Tags -->
-              <div v-if="post.tags && post.tags.length" class="flex flex-wrap gap-1 mb-3 items-center">
-                <span v-for="tag in post.tags.slice(0, 3)" :key="tag.id"
-                  class="text-[10px] bg-blue-50 text-primary px-2 py-0.5 rounded-full whitespace-nowrap">
-                  #{{ tag.name }}
-                </span>
-                <span v-if="post.tags.length > 3"
-                  class="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full whitespace-nowrap font-semibold"
-                  :title="post.tags.slice(3).map(t => '#' + t.name).join(', ')"
-                >
-                  +{{ post.tags.length - 3 }}
-                </span>
-              </div>
-
-              <!-- Actions row -->
-              <div class="flex justify-end pt-3 border-t border-gray-100 mt-auto">
-            
-                <div class="flex items-center gap-2">
-                  <router-link :to="`/edit-post/${post.id}`"
-                    class="flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors">
-                    <span class="material-symbols-outlined text-[15px]">edit</span>
-                    Edit
-                  </router-link>
-                  <button @click="confirmDelete(post)"
-                    class="flex items-center gap-1 text-xs text-gray-500 hover:text-red-500 transition-colors cursor-pointer bg-transparent border-none p-0">
-                    <span class="material-symbols-outlined text-[15px]">delete</span>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </article>
+            :post="post"
+            :show-favorite-button="false"
+            :show-author="false"
+            :show-actions="true"
+            :navigating="navigatingToId === post.id"
+            @click-card="goToDetail"
+            @edit="(id) => router.push('/edit-post/' + id)"
+            @delete="confirmDelete"
+          />
         </div>
 
         <!-- Load More -->
@@ -425,6 +349,8 @@ import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { resolveAvatarUrl } from '@/utils/avatar'
 import api, { getAllCategories } from '@/api/api'
+import BaseCard from '@/components/base/BaseCard.vue'
+import NotificationBell from '@/components/dashboard/NotificationBell.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

@@ -66,13 +66,7 @@
         </div>
 
         <div class="flex items-center gap-1">
-          <button
-            type="button"
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors cursor-pointer relative border-none bg-transparent"
-          >
-            <span class="material-symbols-outlined text-[22px]">notifications</span>
-            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-          </button>
+          <NotificationBell />
           
           <!-- Favorite Header Button (linked to Favorites view) -->
           <router-link
@@ -104,18 +98,13 @@
               v-if="isProfileDropdownOpen"
               class="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-1.5 z-50 animate-fade-in"
             >
-              <div class="px-4 py-2 border-b border-gray-50">
-                <p class="text-xs text-gray-400">Signed in as</p>
-                <p class="text-sm font-bold text-gray-800 truncate">{{ authStore.user?.name || 'User' }}</p>
-              </div>
-
               <router-link
                 to="/profile"
                 @click="isProfileDropdownOpen = false"
                 class="flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-blue-50/50 hover:text-primary transition-colors"
               >
-                <span class="material-symbols-outlined text-[18px]">account_circle</span>
-                <span>My Profile</span>
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+                <span>Setting</span>
               </router-link>
 
               <div class="border-t border-gray-50 my-1"></div>
@@ -174,92 +163,14 @@
 
           <!-- Cards Grid -->
           <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
+            <BaseCard
               v-for="post in filteredPosts"
               :key="post.id"
-              class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col group relative"
-            >
-              <!-- Card Image & Overlay -->
-              <div class="relative w-full h-48 bg-gray-100 shrink-0 overflow-hidden cursor-pointer" @click="goToDetail(post.id)">
-                <img
-                  :src="resolveBlogImageUrl(post.image)"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  alt="post image"
-                />
-                <span class="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-md shadow-sm">
-                  {{ post.category_name || 'General' }}
-                </span>
-                
-                <!-- Favorite Toggle Button -->
-                <button
-                  type="button"
-                  @click.stop="toggleFavorite(post.id)"
-                  class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-red-500 shadow-sm transition-all hover:scale-105 border-none cursor-pointer outline-none"
-                >
-                  <span class="material-symbols-outlined font-fill text-[18px]">favorite</span>
-                </button>
-              </div>
-
-              <!-- Content details -->
-              <div class="p-4 flex-1 flex flex-col justify-between space-y-4">
-                <div class="space-y-2">
-                  <div class="flex items-center justify-between text-[11px] text-gray-400">
-                    <span class="flex items-center gap-1">
-                      <span class="material-symbols-outlined text-[14px]">calendar_today</span>
-                      {{ formatDate(post.created_at) }}
-                    </span>
-                    <span class="flex items-center gap-1">
-                      <span class="material-symbols-outlined text-[14px]">visibility</span>
-                      {{ post.views ?? 0 }} views
-                    </span>
-                  </div>
-
-                  <h3
-                    class="font-bold text-gray-800 text-sm line-clamp-1 group-hover:text-primary transition-colors cursor-pointer"
-                    @click="goToDetail(post.id)"
-                  >
-                    {{ post.title }}
-                  </h3>
-
-                  <p class="text-xs text-gray-500 line-clamp-2 leading-relaxed">
-                    {{ stripHtmlTags(post.content) }}
-                  </p>
-                </div>
-
-                <!-- Footer details: Author, Tags -->
-                <div class="space-y-3 pt-3 border-t border-gray-50">
-                  <!-- Tags inline with +N badges -->
-                  <div class="flex flex-wrap items-center gap-1.5 h-6 overflow-hidden">
-                    <span
-                      v-for="tag in (post.tags || []).slice(0, 3)"
-                      :key="tag.id"
-                      class="text-[10px] px-2 py-0.5 bg-gray-50 text-gray-500 rounded-md font-medium"
-                    >
-                      #{{ tag.name }}
-                    </span>
-                    <span
-                      v-if="(post.tags || []).length > 3"
-                      class="text-[10px] px-1.5 py-0.5 bg-primary/5 text-primary rounded-md font-semibold cursor-help"
-                      :title="(post.tags || []).slice(3).map(t => t.name).join(', ')"
-                    >
-                      +{{ (post.tags || []).length - 3 }}
-                    </span>
-                  </div>
-
-                  <!-- Author details -->
-                  <div class="flex items-center gap-2 pt-1">
-                    <img
-                      :src="resolveAvatarUrl(post.user_avatar, post.user_name)"
-                      class="w-6 h-6 rounded-full object-cover border border-gray-100"
-                      alt="Author avatar"
-                    />
-                    <span class="text-[11px] font-semibold text-gray-700 truncate">
-                      {{ post.user_name || 'Writer' }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              :post="post"
+              :is-favorite="true"
+              @click-card="goToDetail"
+              @toggle-favorite="toggleFavorite"
+            />
           </div>
         </div>
       </main>
@@ -279,6 +190,8 @@ import { useAuthStore } from '@/stores/authStore'
 import api from '@/api/api'
 import ConfirmModal from '@/components/ConfirmModal.vue'
 import { resolveAvatarUrl } from '@/utils/avatar'
+import BaseCard from '@/components/base/BaseCard.vue'
+import NotificationBell from '@/components/dashboard/NotificationBell.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()

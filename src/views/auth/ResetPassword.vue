@@ -70,7 +70,7 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/api/api'
-import '@/assets/auth.css'
+import '@/assets/css/auth.css'
 import {
   LockClosedIcon, EyeIcon, EyeSlashIcon,
   ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon

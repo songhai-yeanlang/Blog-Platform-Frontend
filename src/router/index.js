@@ -52,6 +52,11 @@ const router = createRouter({
       component: () => import('@/views/dashboard/Profile.vue'),
     },
     {
+      path: '/user-profile/:id',
+      name: 'user-profile',
+      component: () => import('@/views/dashboard/UserProfile.vue'),
+    },
+    {
       path: '/new-post',
       name: 'new-post',
       component: () => import('@/views/dashboard/NewPost.vue'),
