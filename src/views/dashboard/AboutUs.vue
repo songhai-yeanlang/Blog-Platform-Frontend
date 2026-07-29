@@ -110,145 +110,162 @@
       </header>
 
       <!-- Content -->
-      <main class="flex-1 overflow-y-auto bg-gray-50 px-6 py-8 relative overflow-hidden">
-        <!-- Ambient blurred background gradients -->
-        <div class="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full filter blur-[120px] pointer-events-none mix-blend-multiply"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-blue-400/5 rounded-full filter blur-[100px] pointer-events-none mix-blend-multiply"></div>
+      <main class="flex-1 overflow-y-auto bg-[#f8fafc] px-4 md:px-8 py-8 relative overflow-hidden">
+        <!-- Subtle background blur lights -->
+        <div class="absolute top-10 left-1/3 w-[450px] h-[450px] bg-blue-500/5 rounded-full filter blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-[350px] h-[350px] bg-indigo-500/5 rounded-full filter blur-[100px] pointer-events-none"></div>
 
         <div class="max-w-5xl mx-auto relative z-10">
           <!-- Main Grid Layout -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8 items-start">
 
-
-
-            <!-- Left Column: About Platform & Purpose (7 cols) -->
+            <!-- Left Column: About Platform & Core Features (7 cols) -->
             <div class="lg:col-span-7 space-y-6">
               
-              <!-- Platform Identity Card -->
-              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 space-y-4">
-                <div class="inline-flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-xl font-bold">
-                    B
-                  </div>
-                  <div>
-                    <h2 class="text-xl font-bold text-gray-900">Blog-Platform</h2>
-                    <p class="text-xs text-gray-400">Version 1.2.0 • Develop by Songhai Yeanlang</p>
-                  </div>
-                </div>
+              <!-- Platform Overview Card -->
+              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 space-y-6">
                 
-                <h3 class="text-base font-bold text-gray-800 pt-2 border-t border-gray-50">What is this website used for?</h3>
-                <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
-                  Blog-Platform is a modern, high-performance publishing space designed for developers, creators, and storytellers. It acts as an open canvas where authors can easily write, layout, edit, and organize public blogs. Readers can follow along, bookmark their favorites, and leave thoughts in real-time.
-                </p>
-                <p class="text-gray-600 text-xs leading-relaxed">
-                  Our system focuses on speed, security, clean UX, and modern micro-interactions (including socket notifications and inline comments control) to build a collaborative writing community.
-                </p>
-              </div>
+                <!-- Platform Header -->
+                <div class="flex items-center justify-between pb-5 border-b border-gray-100">
+                  <div class="flex items-center gap-3.5">
+                    <div class="w-11 h-11 rounded-xl bg-blue-50 text-primary flex items-center justify-center font-bold border border-blue-100/60">
+                      <span class="material-symbols-outlined text-2xl">auto_stories</span>
+                    </div>
+                    <div>
+                      <h2 class="text-xl font-bold text-gray-900 tracking-tight">Blog-Platform</h2>
+                      <p class="text-xs text-gray-400 font-medium">Version 1.2.0 • Developed by Songhai Yeanlang</p>
+                    </div>
+                  </div>
+                  
+                </div>
 
-              <!-- Key Platform Capabilities -->
-              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-                <h3 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-                  <span class="material-symbols-outlined text-[18px] text-primary">auto_awesome</span>
-                  <span>Core System Architecture</span>
-                </h3>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <!-- Cap 1 -->
-                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100 space-y-2">
-                    <span class="material-symbols-outlined text-[24px] text-primary">edit_note</span>
-                    <h4 class="font-bold text-xs text-gray-800">Rich Publishing</h4>
-                    <p class="text-[10px] text-gray-500 leading-relaxed">
-                      Features tags, dynamic category filters, view counters, and cover media uploading.
-                    </p>
-                  </div>
-                  <!-- Cap 2 -->
-                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100 space-y-2">
-                    <span class="material-symbols-outlined text-[24px] text-primary">bolt</span>
-                    <h4 class="font-bold text-xs text-gray-800">Real-time Sockets</h4>
-                    <p class="text-[10px] text-gray-500 leading-relaxed">
-                      Instant audio notification alerts to post authors whenever comments are posted.
-                    </p>
-                  </div>
-                  <!-- Cap 3 -->
-                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100 space-y-2">
-                    <span class="material-symbols-outlined text-[24px] text-primary">forum</span>
-                    <h4 class="font-bold text-xs text-gray-800">Inline Moderation</h4>
-                    <p class="text-[10px] text-gray-500 leading-relaxed">
-                      Writers can modify comments inline or delete comments directly on their posts.
-                    </p>
-                  </div>
-                  <!-- Cap 4 -->
-                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100 space-y-2">
-                    <span class="material-symbols-outlined text-[24px] text-primary">favorite</span>
-                    <h4 class="font-bold text-xs text-gray-800">Personal Favorites</h4>
-                    <p class="text-[10px] text-gray-500 leading-relaxed">
-                      Track and bookmark loved publications for continuous reading experience.
-                    </p>
+                <!-- About Platform Section -->
+                <div class="space-y-4">
+                  <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wider text-xs text-gray-400">About Platform</h3>
+                  
+                  <div class="grid grid-cols-1 gap-3">
+                    <!-- Frontend -->
+                    <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-100 space-y-1.5 hover:bg-white hover:border-blue-100 hover:shadow-xs transition-all">
+                      <div class="flex items-center gap-2 text-gray-900 font-bold text-sm">
+                        <span class="material-symbols-outlined text-primary text-lg">desktop_windows</span>
+                        <span>Frontend</span>
+                      </div>
+                      <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
+                        A Single-Page Application (SPA) where users can create, edit, browse, favorite blog posts, leave comments, update their profiles, and receive live notifications.
+                      </p>
+                    </div>
+
+                    <!-- Backend -->
+                    <div class="p-4 rounded-xl bg-slate-50/70 border border-slate-100 space-y-1.5 hover:bg-white hover:border-blue-100 hover:shadow-xs transition-all">
+                      <div class="flex items-center gap-2 text-gray-900 font-bold text-sm">
+                        <span class="material-symbols-outlined text-indigo-600 text-lg">dns</span>
+                        <span>Backend</span>
+                      </div>
+                      <p class="text-gray-600 text-xs md:text-sm leading-relaxed">
+                        A RESTful & WebSocket API server responsible for handling user authentication, data persistence, file uploads, image optimization, and real-time socket events.
+                      </p>
+                    </div>
                   </div>
                 </div>
+
+                <!-- Core Features Section -->
+                <div class="space-y-4 pt-2">
+                  <div class="flex items-center gap-2 pb-2 border-b border-gray-100">
+                    <span class="material-symbols-outlined text-primary text-xl">view_cozy</span>
+                    <h3 class="text-base font-bold text-gray-900">Core Features</h3>
+                  </div>
+
+                  <div class="space-y-3">
+                    <!-- Auth -->
+                    <div class="flex items-start gap-3.5 p-3.5 rounded-xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-xs transition-all">
+                      <div class="w-9 h-9 rounded-lg bg-blue-50 text-primary flex items-center justify-center shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-xl">shield</span>
+                      </div>
+                      <div class="space-y-0.5">
+                        <h4 class="text-xs md:text-sm font-bold text-gray-900">Authentication</h4>
+                        <p class="text-gray-600 text-xs leading-relaxed">
+                          Registration, Login, Email Verification, OTP Code Verification, and Password Reset.
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Content Management -->
+                    <div class="flex items-start gap-3.5 p-3.5 rounded-xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-xs transition-all">
+                      <div class="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-xl">edit_note</span>
+                      </div>
+                      <div class="space-y-0.5">
+                        <h4 class="text-xs md:text-sm font-bold text-gray-900">Content Management</h4>
+                        <p class="text-gray-600 text-xs leading-relaxed">
+                          Create/Edit blog posts, tag posts, organize into categories, and manage favorite posts.
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Interactivity & Social -->
+                    <div class="flex items-start gap-3.5 p-3.5 rounded-xl border border-gray-100 bg-white hover:border-blue-200 hover:shadow-xs transition-all">
+                      <div class="w-9 h-9 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center shrink-0 mt-0.5">
+                        <span class="material-symbols-outlined text-xl">forum</span>
+                      </div>
+                      <div class="space-y-0.5">
+                        <h4 class="text-xs md:text-sm font-bold text-gray-900">Interactivity & Social</h4>
+                        <p class="text-gray-600 text-xs leading-relaxed">
+                          Comment section, user profiles, and real-time notifications via WebSockets.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
             </div>
 
             <!-- Right Column: Developer Profile (5 cols) -->
             <div class="lg:col-span-5 flex justify-center lg:justify-end lg:sticky lg:top-8">
-              <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8 text-center flex flex-col items-center gap-6 w-full max-w-[420px] relative overflow-hidden bg-gradient-to-b from-white to-gray-50/50">
-                <!-- Subtle card background dots mesh pattern -->
-                <div class="absolute inset-0 opacity-[0.22] pointer-events-none" style="background-image: radial-gradient(rgba(59, 130, 246, 0.15) 1.2px, transparent 1.2px); background-size: 20px 20px;"></div>
+              <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8 text-center flex flex-col items-center gap-6 w-full max-w-[420px] relative overflow-hidden bg-gradient-to-b from-white to-slate-50/50">
                 
-                <!-- Floating Deco Elements (Grid Dots & Crosses) -->
-                <div class="absolute top-4 right-4 flex flex-col gap-1 opacity-20">
-                  <div class="flex gap-1">
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                  </div>
-                  <div class="flex gap-1">
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                    <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                  </div>
-                </div>
-                <div class="absolute top-24 left-4 text-xs text-primary/30 font-bold select-none">+</div>
+                <!-- Background Mesh Overlay -->
+                <div class="absolute inset-0 opacity-[0.18] pointer-events-none" style="background-image: radial-gradient(rgba(59, 130, 246, 0.15) 1.2px, transparent 1.2px); background-size: 20px 20px;"></div>
 
                 <!-- Layered Creative Profile Graphic -->
-                <div class="relative w-80 h-80 flex items-center justify-center select-none shrink-0 mt-2">
+                <div class="relative w-72 h-72 flex items-center justify-center select-none shrink-0 mt-1">
                   <!-- Abstract Outlined Rotating Ring -->
                   <div class="absolute inset-0 border border-primary/20 rounded-[40%_60%_70%_30%_/_40%_50%_60%_50%] animate-[spin_30s_linear_infinite]"></div>
-                  <div class="absolute inset-4 border border-dashed border-gray-250 rounded-full"></div>
+                  <div class="absolute inset-4 border border-dashed border-gray-200 rounded-full"></div>
 
                   <!-- Dark Blob Backdrop Layer -->
-                  <div class="absolute w-52 h-52 bg-gray-900 rounded-[50%_50%_30%_70%_/_50%_60%_40%_60%] transform rotate-12 opacity-95"></div>
+                  <div class="absolute w-48 h-48 bg-gray-900 rounded-[50%_50%_30%_70%_/_50%_60%_40%_60%] transform rotate-12 opacity-95"></div>
 
                   <!-- Blue Blob Backdrop Layer -->
-                  <div class="absolute w-48 h-48 bg-primary rounded-[40%_60%_50%_50%_/_60%_40%_60%_40%] transform -rotate-12 translate-x-1.5 translate-y-1"></div>
+                  <div class="absolute w-44 h-44 bg-primary rounded-[40%_60%_50%_50%_/_60%_40%_60%_40%] transform -rotate-12 translate-x-1 translate-y-1"></div>
 
                   <!-- Profile Image (Clipped Circle) -->
-                  <div class="absolute w-64 h-64 rounded-full overflow-hidden border-4 border-white shadow-xl z-10 bg-white">
+                  <div class="absolute w-56 h-56 rounded-full overflow-hidden border-4 border-white shadow-xl z-10 bg-white">
                     <img 
                       :src="devPhoto" 
-                      class="w-full h-full object-cover mt-[45px] scale-[1.35] origin-center transition-transform duration-500 scale-[1.45] hover:scale-[1.55]" 
+                      class="w-full h-full object-cover mt-[40px] scale-[1.35] origin-center transition-transform duration-500 hover:scale-[1.45]" 
                       alt="SONGHAI Yeanlang" 
                     />
                   </div>
 
                   <!-- Decorative Star/Sparkle -->
-                  <div class="absolute bottom-6 right-6 text-primary font-bold text-sm">✦</div>
+                  <div class="absolute bottom-5 right-5 text-primary font-bold text-sm">✦</div>
                 </div>
 
-                <!-- Dev Stats & Details -->
-                <div class="space-y-4 w-full">
+                <!-- Dev Details -->
+                <div class="space-y-4 w-full relative z-10">
                   <div class="space-y-1">
-                    <h4 class="font-extrabold text-gray-900 text-xl tracking-tight">SONGHAI Yeanlang.</h4>
-                    <p class="text-xs font-bold text-primary uppercase tracking-wide">
-                      Full-Stack Developer
-                    </p>
-                    <p class="text-xs  tracking-wide">
-                     +855 61 883 888 | langofficial19@gmail.com
+                    <h4 class="font-extrabold text-gray-900 text-xl tracking-tight">SONGHAI Yeanlang</h4>
+                    <p class="text-xs font-bold text-primary tracking-wide">
+                      Express.js, Vue.js, MySQL & RESTful API
                     </p>
                   </div>
 
-                 
+                  
+
+                  
+
                 </div>
               </div>
             </div>
